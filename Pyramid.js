@@ -23,10 +23,21 @@ Pyramid.prototype.render = function(gl,transformMatrix){
 
 Pyramid.prototype.visit = function(x,y) {
     var cube = this.getCube(x,y);
-    if (cube && !cube.isVisited){
-        cube.swapColor();
-        cube.isVisited = true;
+    if (cube){
+        cube.markVisited();
     }
+};
+
+Pyramid.prototype.unVisit = function(x,y) {
+    var cube = this.getCube(x,y);
+    if (cube){
+        cube.markUnVisited();
+    }
+};
+
+
+Pyramid.prototype.markVisit = function(x,y){
+    this.cubes[this.height+x][this.height+y].markVisited();
 };
 
 Pyramid.prototype.isVisited = function(x,y) {
@@ -48,7 +59,7 @@ Pyramid.prototype.hasWon = function() {
 }
 
 Pyramid.prototype.getCube = function(x,y) {
-    if (! this.cubes[x+this.height-1])
+    if (!this.cubes[x+this.height-1])
         return null;
     return this.cubes[x+this.height-1][y+this.height-1];
 }
