@@ -48,6 +48,8 @@ Pyramid.prototype.hasWon = function() {
 }
 
 Pyramid.prototype.getCube = function(x,y) {
+    if (! this.cubes[x+this.height-1])
+        return null;
     return this.cubes[x+this.height-1][y+this.height-1];
 }
 
