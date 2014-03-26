@@ -3,21 +3,11 @@ function Tebert(descr){
     this.setup(descr);
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
+    this.currentTrans = [0,0,0,0];
+    this.setColor(this.color || [1.0,0.0,0.0,1.0]);
+    this.scale([0.3,0.3,0.3]);
 };
-
-Tebert.prototype = new Model();
-
-Tebert.prototype.move = function(newPos){
-    var currLoc = this.loc;
-    var trans = [newPos[0],0,newPos[1],0];
-    var currH = this.loc[1];
-    var newH =
-	    - Math.abs(newPos[0]+this.loc[0])
-	    - Math.abs(newPos[1]+this.loc[2]);
-    var diff = newH - currH + this.origHeight;
-    trans[1] = diff;
-    this.translate(trans);
-};
+Tebert.prototype = new Character();
 
 Tebert.prototype.keys = function(keyPressed){
     var keys = {
@@ -36,5 +26,5 @@ Tebert.prototype.keys = function(keyPressed){
     };
 
     var newLoc = keys[keyPressed]();
-    this.move(newLoc);
+    this.addMove(newLoc);
 };

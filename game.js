@@ -29,7 +29,7 @@ var modelViewM;
 var projectionM;
 
 var shouldQuit = false;
-var shouldUpdate = false;
+var shouldUpdate = true;
 var shouldSingleStep = false;
 
 var tebert;
@@ -108,24 +108,22 @@ window.onload = function init() {
     //plyReader.read("teapot.ply",onModelReady);
     //plyReader.read("cube.ply",onModelReady);
     cube = new Cube();
-    cube2 = new Cube();
+    //cube2 = new Cube();
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
-    tebert = new Tebert({"loc":[0,1,0,1]});
+    tebert = new Tebert({"loc":[0,1.5,0,1], "color": [1.0,0.0,0.0,0.0]});
     start();
 };
 
 function start(){
-    tebert.setColor([1.0,0.0,0.0,1.0]);
-    tebert.scale([0.5,0.5,0.5]);
     //tebert.translate([0.0,1.0,0.0]);
     cube.scale([0.5,0.5,0.5]);
-    cube.translate([-1,0,0]);
+    cube.translate([0,0,0]);
+    //cube.swapColor();
     cube.swapColor();
-    cube.swapColor();
-    cube2.scale([0.5,0.5,0.5]);
-    cube2.swapColor();
-    cube2.translate([1,0,0]);
+    //cube2.scale([0.5,0.5,0.5]);
+    //cube2.swapColor();
+    //cube2.translate([1,0,0]);
     window.requestAnimFrame(main);
 };
 
@@ -144,6 +142,7 @@ function update(dt) {
     // giving us a conveniently scaled "du" to work with.
     //
     var du = (dt / NOMINAL_UPDATE_INTERVAL);
+    tebert.update(du);
 }
 
 
@@ -191,6 +190,6 @@ function render()
 
     tebert.render(gl);
     cube.render(gl);
-    cube2.render(gl);
+    //cube2.render(gl);
 }
 
