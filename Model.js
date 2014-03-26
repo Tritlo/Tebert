@@ -126,3 +126,18 @@ Model.prototype.render = function(gl,transformMatrix){
     gl.drawArrays( gl.TRIANGLES, 0, this.points.length);
 };
 
+
+
+Model.prototype.isVisited = false;
+
+Model.prototype.markVisited = function(){
+    var yellow= [1.0,1.0,0.0,1.0];
+    this.setColor(yellow);
+    this.isVisited = true;
+};
+
+Model.prototype.markUnVisited = function(){
+    var blue = [0.0,0.0,1.0,1.0];
+    this.setColor(blue);
+    this.isVisited = false;
+};

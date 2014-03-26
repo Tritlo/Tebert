@@ -12,4 +12,5 @@ Cube.prototype.isVisited = false;
 Cube.prototype.markVisited = function(){
     var yellow= [1.0,1.0,0.0,1.0];
     this.setColor(yellow);
+    this.isVisited = true;
 };
