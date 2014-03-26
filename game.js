@@ -108,7 +108,7 @@ window.onload = function init() {
     
     //plyReader.read("teapot.ply",onModelReady);
     //plyReader.read("cube.ply",onModelReady);
-    cube = new Cube();
+    //cube = new Cube();
     //cube2 = new Cube();
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
@@ -119,10 +119,10 @@ window.onload = function init() {
 
 function start(){
     //tebert.translate([0.0,1.0,0.0]);
-    cube.scale([0.5,0.5,0.5]);
-    cube.translate([0,0,0]);
+    //cube.scale([0.5,0.5,0.5]);
+    //cube.translate([0,0,0]);
     //cube.swapColor();
-    cube.swapColor();
+    //cube.swapColor();
     //cube2.scale([0.5,0.5,0.5]);
     //cube2.swapColor();
     //cube2.translate([1,0,0]);
@@ -191,7 +191,6 @@ function render()
     gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
 
     tebert.render(gl);
-//    cube.render(gl);
     pyramid.render(gl);
 }
 

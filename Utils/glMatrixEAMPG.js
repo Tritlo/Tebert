@@ -985,6 +985,17 @@ vec4.equal = function(a,b){
     return vec4.isZero(ret);
 };
 
+vec4.round = function(b,dest){
+    if(!dest){
+	dest = [0,0,0,0];
+    }
+    dest[0] = Math.round(b[0]);
+    dest[1] = Math.round(b[1]);
+    dest[2] = Math.round(b[2]);
+    dest[3] = Math.round(b[3]);
+    return dest;
+};
+
 
 /* ------------------------------ */
 

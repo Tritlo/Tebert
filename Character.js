@@ -16,7 +16,21 @@ Character.prototype.move = function(newPos){
     var diff = newH - currH + this.origHeight;
     trans[1] = diff;
     trans[3] = 0;
-    this.startAnim(trans);
+    if(this.isLegal(trans)){
+	this.startAnim(trans);
+    }
+};
+
+Character.prototype.isLegal = function(trans){
+    trans = vec4.add(trans,this.loc,vec4.create());
+    return (Math.abs(trans[0]) <= 3 &&  Math.abs(trans[3]) <= 3);
+};
+
+Character.prototype.onAnimEnd = function(loc){
+    //Callback on anim end
+};
+Character.prototype.onAnimStart = function(loc){
+    //Callback on anim start
 };
 
 Character.prototype.update = function(du){
@@ -35,7 +49,7 @@ Character.prototype.addMove = function(trans){
 
 Character.prototype.startAnim = function(trans){
     this.currTransParts = 0;
-    this.animParts = 10;
+    this.animParts = this.animSpeed || 10;
     this.currentTrans = trans;
 
     this.transPart = vec4.scale(trans, 2/this.animParts, vec4.create());
@@ -47,7 +61,7 @@ Character.prototype.startAnim = function(trans){
     }
 
     this.animating = true;
-
+    this.onAnimStart(vec4.round(this.loc));
 };
 
 Character.prototype.halfAnim = function(){
@@ -65,6 +79,7 @@ Character.prototype.endAnim = function(){
     this.animating = false;
     this.currentTrans = [0,0,0,0];
     this.transPart = [0,0,0,0];
+    this.onAnimEnd(vec4.round(this.loc));
 };
 
 Character.prototype.animate = function(){
