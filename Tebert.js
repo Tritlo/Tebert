@@ -14,9 +14,7 @@ Tebert.prototype.move = function(newPos){
     var newH =
 	    - Math.abs(newPos[0]+this.loc[0])
 	    - Math.abs(newPos[1]+this.loc[2]);
-    console.log(newH);
     var diff = newH - currH + this.origHeight;
-    console.log(newH);
     trans[1] = diff;
     this.translate(trans);
 };
