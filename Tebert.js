@@ -12,7 +12,7 @@ Tebert.prototype = new Character();
 
 Tebert.prototype.onAnimEnd = function(loc){
     //pyramid.markVisit(loc[0],loc[2]);
-    pyramid.swapColor(loc[0],loc[2]);
+    pyramid.visit(loc[0],loc[2]);
 };
 
 Tebert.prototype.keys = function(keyPressed){

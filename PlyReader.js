@@ -172,7 +172,7 @@ var PlyReader =(function(){
 	    }
 	    return model;
 	},
-	getData: function(file, callback){
+	getData: function(file){
 	    var data = loadFile(file);
 	    var parsed = this.parse(data);
 	    return parsed;

@@ -23,7 +23,7 @@ Character.prototype.move = function(newPos){
 
 Character.prototype.isLegal = function(trans){
     trans = vec4.add(trans,this.loc,vec4.create());
-    return (Math.abs(trans[0]) <= 3 &&  Math.abs(trans[3]) <= 3);
+    return (Math.abs(trans[0]) +Math.abs(trans[2]) <= 3);
 };
 
 Character.prototype.onAnimEnd = function(loc){

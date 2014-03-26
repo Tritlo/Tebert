@@ -28,9 +28,6 @@ Pyramid.prototype.visit = function(x,y) {
         cube.isVisited = true;
     }
 };
-Pyramid.prototype.markVisit = function(x,y){
-    this.cubes[this.height+x][this.height+y].markVisited();
-};
 
 Pyramid.prototype.isVisited = function(x,y) {
     var cube = this.getCube(x,y);
