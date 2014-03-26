@@ -115,6 +115,7 @@ window.onload = function init() {
     //tebert = new Tebert({"loc":[0,1,0,1]});
     tebert = new Tebert({"loc":[0,1.5,0,1], "color": [1.0,0.0,0.0,0.0]});
     pyramid = new Pyramid();
+    pyramid.visit(0,0);
     ball = new Ball({"loc":[0,1.5,0,1], "color": [1.0,0.0,1.0,0.0]});
     start();
 };

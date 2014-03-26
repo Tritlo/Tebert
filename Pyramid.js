@@ -3,6 +3,8 @@ function Pyramid(descr){
 	this[prop] = descr[prop];
     }
     this.init();
+    this.visited = 0;
+    this.total = 0;
 };
 
 
@@ -25,13 +27,15 @@ Pyramid.prototype.visit = function(x,y) {
     var cube = this.getCube(x,y);
     if (cube){
         cube.markVisited();
+	this.visited += 1;
     }
 };
 
 Pyramid.prototype.unVisit = function(x,y) {
     var cube = this.getCube(x,y);
-    if (cube){
+    if (cube && cube.isVisited){
         cube.markUnVisited();
+	this.visited -= 1;
     }
 };
 
@@ -48,6 +52,7 @@ Pyramid.prototype.isVisited = function(x,y) {
 }
 
 Pyramid.prototype.hasWon = function() {
+    /*
     for (var i = 0; i < this.cubes.length; i++) {
         for (var j = 0; j < this.cubes.length; j++) {
             if (this.cubes[i][j] && !this.cubes[i][j].isVisited) {
@@ -55,7 +60,9 @@ Pyramid.prototype.hasWon = function() {
             }
         }
     }
-    return true;
+     */
+    
+    return this.visited === this.total;
 }
 
 Pyramid.prototype.getCube = function(x,y) {
@@ -79,7 +86,9 @@ Pyramid.prototype.init = function() {
                 this.cubes[i][j] = protoCube.modelCopy();
                 //this.cubes[i][j] = new Cube();
                 this.cubes[i][j].scale([0.5,0.5,0.5]);
+		this.cubes[i][j].markUnVisited();
                 this.cubes[i][j].translate([i-this.height+1, -this.manhattanDist(i,j), j-this.height+1]);
+		this.total += 1;
             }
         }
     }

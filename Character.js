@@ -23,7 +23,7 @@ Character.prototype.move = function(newPos){
 
 Character.prototype.isLegal = function(trans){
     trans = vec4.add(trans,this.loc,vec4.create());
-    return (Math.abs(trans[0]) +Math.abs(trans[2]) <= 3);
+    return (Math.abs(trans[0]) +Math.abs(trans[2]) < pyramid.height);
 };
 
 Character.prototype.onAnimEnd = function(loc){
@@ -65,7 +65,6 @@ Character.prototype.startAnim = function(trans){
 };
 
 Character.prototype.halfAnim = function(){
-    console.log("halfanim");
     this.transPart = vec4.scale(this.currentTrans, 2/this.animParts, vec4.create());
     if(this.transPart[1] < 0){
 	this.transPart[0] = 0;
