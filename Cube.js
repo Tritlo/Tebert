@@ -6,4 +6,6 @@ function Cube(descr){
     this.setup(descr);
 };
 
+Cube.prototype.isVisited = false;
+
 Cube.prototype = new Model();

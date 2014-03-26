@@ -32,6 +32,7 @@ var shouldQuit = false;
 var shouldUpdate = false;
 var shouldSingleStep = false;
 
+var pyramid;
 var tebert;
 var plyReader = PlyReader();
 
@@ -112,6 +113,7 @@ window.onload = function init() {
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
     tebert = new Tebert({"loc":[0,1,0,1]});
+    pyramid = new Pyramid();
     start();
 };
 
@@ -192,5 +194,6 @@ function render()
     tebert.render(gl);
     cube.render(gl);
     cube2.render(gl);
+    pyramid.render(gl);
 }
 
