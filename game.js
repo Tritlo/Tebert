@@ -109,28 +109,26 @@ window.onload = function init() {
     
     //plyReader.read("teapot.ply",onModelReady);
     //plyReader.read("cube.ply",onModelReady);
-    cube = new Cube();
-    cube2 = new Cube();
+    //cube = new Cube();
+    //cube2 = new Cube();
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
-    tebert = new Tebert({"loc":[0,1,0,1]});
+    tebert = new Tebert({"loc":[0,1.5,0,1], "color": [1.0,0.0,0.0,0.0]});
     pyramid = new Pyramid();
     ball = new Ball({"loc":[0,1,0,1]});
     start();
 };
 
 function start(){
-    tebert.setColor([1.0,0.0,0.0,1.0]);
-    tebert.scale([0.5,0.5,0.5]);
     //tebert.translate([0.0,1.0,0.0]);
     ball.scale([0.5,0.5,0.5]);
-    cube.scale([0.5,0.5,0.5]);
-    cube.translate([-1,0,0]);
-    cube.swapColor();
-    cube.swapColor();
-    cube2.scale([0.5,0.5,0.5]);
-    cube2.swapColor();
-    cube2.translate([1,0,0]);
+    //cube.scale([0.5,0.5,0.5]);
+    //cube.translate([0,0,0]);
+    //cube.swapColor();
+    //cube.swapColor();
+    //cube2.scale([0.5,0.5,0.5]);
+    //cube2.swapColor();
+    //cube2.translate([1,0,0]);
     window.requestAnimFrame(main);
 };
 
@@ -150,7 +148,7 @@ function update(dt) {
     //
     var du = (dt / NOMINAL_UPDATE_INTERVAL);
     ball.update(du);
-
+    tebert.update(du);
 }
 
 
