@@ -29,10 +29,11 @@ var modelViewM;
 var projectionM;
 
 var shouldQuit = false;
-var shouldUpdate = false;
+var shouldUpdate = true;
 var shouldSingleStep = false;
 
 var pyramid;
+var ball;
 var tebert;
 var plyReader = PlyReader();
 
@@ -114,6 +115,7 @@ window.onload = function init() {
     //tebert = new Tebert({"loc":[0,1,0,1]});
     tebert = new Tebert({"loc":[0,1,0,1]});
     pyramid = new Pyramid();
+    ball = new Ball({"loc":[0,1,0,1]});
     start();
 };
 
@@ -121,6 +123,7 @@ function start(){
     tebert.setColor([1.0,0.0,0.0,1.0]);
     tebert.scale([0.5,0.5,0.5]);
     //tebert.translate([0.0,1.0,0.0]);
+    ball.scale([0.5,0.5,0.5]);
     cube.scale([0.5,0.5,0.5]);
     cube.translate([-1,0,0]);
     cube.swapColor();
@@ -146,6 +149,8 @@ function update(dt) {
     // giving us a conveniently scaled "du" to work with.
     //
     var du = (dt / NOMINAL_UPDATE_INTERVAL);
+    ball.update(du);
+
 }
 
 
@@ -192,8 +197,9 @@ function render()
     gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
 
     tebert.render(gl);
-    cube.render(gl);
-    cube2.render(gl);
+    // cube.render(gl);
+    // cube2.render(gl);
     pyramid.render(gl);
+    ball.render(gl);
 }
 

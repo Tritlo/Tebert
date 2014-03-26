@@ -21,6 +21,10 @@ function radians( degrees ) {
     return degrees * Pi / 180.0;
 }
 
+function randInt(start, end) {
+    return Math.floor(start + Math.random() * (end - start))
+}
+
 
 /*
 N: modelViewM = AzElView(azim,elev,loc)

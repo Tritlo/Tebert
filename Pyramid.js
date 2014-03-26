@@ -21,12 +21,19 @@ Pyramid.prototype.render = function(gl,transformMatrix){
     }
 };
 
-Pyramid.prototype.swapColor = function(x,y) {
-    this.cubes[this.height+x][this.height+y].swapColor();
+Pyramid.prototype.visit = function(x,y) {
+    var cube = this.getCube(x,y);
+    if (cube && !cube.isVisited){
+        cube.swapColor();
+        cube.isVisited = true;
+    }
 };
 
 Pyramid.prototype.isVisited = function(x,y) {
-    return this.cubes[this.height-x][this.height-y].isVisited;
+    var cube = this.getCube(x,y);
+    if (cube)
+        return cube.isVisited;
+    return false;
 }
 
 Pyramid.prototype.hasWon = function() {
@@ -38,6 +45,10 @@ Pyramid.prototype.hasWon = function() {
         }
     }
     return true;
+}
+
+Pyramid.prototype.getCube = function(x,y) {
+    return this.cubes[x+this.height-1][y+this.height-1];
 }
 
 
@@ -53,13 +64,14 @@ Pyramid.prototype.init = function() {
             if (this.manhattanDist(i,j) < this.height) {
                 this.cubes[i][j] = protoCube.modelCopy();
                 this.cubes[i][j].scale([0.5,0.5,0.5]);
-                this.cubes[i][j].translate([i-this.height, -this.manhattanDist(i,j), j-this.height]);
+                this.cubes[i][j].translate([i-this.height+1, -this.manhattanDist(i,j), j-this.height+1]);
             }
         }
     }
+    this.visit(1,1);
 }
 
 
 Pyramid.prototype.manhattanDist = function(x,y) {
-    return Math.abs(this.height-x) + Math.abs(this.height-y);
+    return Math.abs(this.height-x-1) + Math.abs(this.height-y-1);
 }
