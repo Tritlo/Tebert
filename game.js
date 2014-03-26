@@ -32,7 +32,7 @@ var shouldQuit = false;
 var shouldUpdate = false;
 var shouldSingleStep = false;
 
-var mod;
+var tebert;
 var plyReader = PlyReader();
 
 var distFromEdgeOfScreen = 22;
@@ -107,18 +107,18 @@ window.onload = function init() {
     
     //plyReader.read("teapot.ply",onModelReady);
     //plyReader.read("cube.ply",onModelReady);
-    protoCube = plyReader.read("cube.ply");
     cube = new Cube();
-    cube2 = cube.modelCopy();
+    cube2 = new Cube();
     //plyReader.read("teapot-n.ply",onModelReady);
-    mod = new Tebert({"hey":1});
+    //tebert = new Tebert({"loc":[0,1,0,1]});
+    tebert = new Tebert({"loc":[0,1,0,1]});
     start();
 };
 
 function start(){
-    mod.setColor([1.0,0.0,0.0,1.0]);
-    mod.scale([0.5,0.5,0.5]);
-    mod.translate([0.0,1.0,0.0]);
+    tebert.setColor([1.0,0.0,0.0,1.0]);
+    tebert.scale([0.5,0.5,0.5]);
+    //tebert.translate([0.0,1.0,0.0]);
     cube.scale([0.5,0.5,0.5]);
     cube.translate([-1,0,0]);
     cube.swapColor();
@@ -189,7 +189,7 @@ function render()
     gl.uniformMatrix4fv(gl.mVMLoc,false,modelViewM);
     gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
 
-    mod.render(gl);
+    tebert.render(gl);
     cube.render(gl);
     cube2.render(gl);
 }

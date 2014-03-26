@@ -1,4 +1,8 @@
 //util.js (C) 2014 Matthias Pall Gissurarson
+// A tiny little convenience function
+function keyCode(keyChar) {
+    return keyChar.charCodeAt(0);
+}
 
 function angleBound(rot){
     var r = [rot[0] % 360,rot[1] % 360,rot[2] % 360,rot[3]];

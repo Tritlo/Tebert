@@ -7,10 +7,11 @@ Model.prototype.setup = function(descr){
 	descr = plyReader.getData(descr);
     }
     for(var prop in descr){
-	this[prop] = descr[prop];
+	this[prop] =  descr[prop];
     }
-    this.loc = [0.0,0.0,0.0,1.0];
-    this.objMatr = mat4.identity(mat4.create());
+    this.loc = this.loc || [0.0,0.0,0.0,1.0]; 
+    this.objMatr = this.objMatr ||  mat4.identity(mat4.create());
+    this.translate(this.loc);
     this.init();
 };
 
@@ -30,6 +31,7 @@ Model.prototype.translate = function(t){
 	t[3] = 0;
     }
     vec4.add(this.loc,t,this.loc);
+    this.loc[3] = 1;
     var funcMatr = mat4.translate(mat4.identity(mat4.create()),t);
     this.updateObjM(funcMatr);
 };
@@ -40,9 +42,9 @@ Model.prototype.scale= function(s){
 };
 
 Model.prototype.rotate= function(angle,axis){
-    var funcMatr = mat4.scale(mat4.identity(mat4.create()),angle,axis);
+    var funcMatr = mat4.rotate(mat4.identity(mat4.create()),angle,axis);
     this.updateObjM(funcMatr);
-    mat4.multiplyVec4(funcMatr,this.loc);
+    this.loc = mat4.multiplyVec4(funcMatr,this.loc);
 };
 
 //Returns a copy of this model, while referring to the same

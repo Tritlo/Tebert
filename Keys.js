@@ -1,5 +1,20 @@
+
+
 function handleKeyDown(evt){
+    var keys = {};
     keycode = {
+	73: function () { //i
+	    tebert.keys("i");
+	},
+	74: function () { //j
+	    tebert.keys("j");
+	},
+	75: function () { //k
+	    tebert.keys("k");
+	},
+	76: function () { //l
+	    tebert.keys("l");
+	},
 	87: function () { //w
 	    eye[2] += 0.1;
 	},
@@ -29,7 +44,6 @@ function handleKeyDown(evt){
 	}
 
 	};
-    //console.log(evt.keyCode);
     if(!(evt.shiftKey) && (evt.keyCode in keycode)){
 	keycode[evt.keyCode]();
     }
