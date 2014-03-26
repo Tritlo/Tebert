@@ -108,15 +108,14 @@ window.onload = function init() {
     //plyReader.read("teapot.ply",onModelReady);
     //plyReader.read("cube.ply",onModelReady);
     protoCube = plyReader.read("cube.ply");
-    cube = protoCube.modelCopy();
+    cube = new Cube();
     cube2 = cube.modelCopy();
-    console.log(cube2);
     //plyReader.read("teapot-n.ply",onModelReady);
-    plyReader.read("monkey.ply",onModelReady);
+    mod = new Tebert({"hey":1});
+    start();
 };
 
-function onModelReady(mel){
-    mod = mel;
+function start(){
     mod.setColor([1.0,0.0,0.0,1.0]);
     mod.scale([0.5,0.5,0.5]);
     mod.translate([0.0,1.0,0.0]);

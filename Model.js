@@ -1,11 +1,19 @@
 function Model(descr){
+    this.setup(descr);
+}
+
+Model.prototype.setup = function(descr){
+    if(typeof(descr) === "string"){
+	descr = plyReader.getData(descr);
+    }
     for(var prop in descr){
 	this[prop] = descr[prop];
     }
-    this.init();
     this.loc = [0.0,0.0,0.0,1.0];
     this.objMatr = mat4.identity(mat4.create());
-}
+    this.init();
+};
+
 Model.prototype.init = function (){
     var  brightGreen = [0.0,1.0,0.0,1.0];
     this.setColor(this.color || brightGreen);
@@ -40,6 +48,11 @@ Model.prototype.rotate= function(angle,axis){
 //Returns a copy of this model, while referring to the same
 //Points, normals and pols
 Model.prototype.modelCopy = function() {
+    var m = this.getData();
+    return new Model(m);
+};
+
+Model.prototype.getData = function(){
     var m =  {"points": this.points,
 	      "normals": this.normals,
 	      "polys": this.pols};
@@ -50,7 +63,8 @@ Model.prototype.modelCopy = function() {
 	      "normals": this.normals.slice(0),
 	      "polys": this.pols.slice(0)};
     */
-    return new Model(m);
+    return m;
+
 };
 
 Model.prototype.swapColor = function(color){

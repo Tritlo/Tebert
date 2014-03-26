@@ -166,25 +166,20 @@ var PlyReader =(function(){
 	    return {"points": points, "normals":normals, "polys": pols};
 	},
 	toModel: function(data,callback){
-	    var parsed = this.parse(data);
-	    var model = new Model(parsed);
+	    var model = new Model(data);
 	    if(callback){
 		callback(model);
 	    }
 	    return model;
 	},
 	getData: function(file, callback){
+	    var data = loadFile(file);
 	    var parsed = this.parse(data);
-	    if(callback){
-		callback(parsed);
-	    }
 	    return parsed;
-
 	},
 	//works both in node.js and on web.
 	read: function(file,callback){
-	    var data = loadFile(file);
-	    return this.toModel(data,callback);
+	    return this.toModel(this.getData(file),callback);
 	}
     };
     Parser = function() {};
