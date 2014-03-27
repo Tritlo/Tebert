@@ -6,6 +6,8 @@ function Character(descr){
 
 Character.prototype = new Model();
 
+Character.prototype.isDead = false;
+
 Character.prototype.move = function(newPos){
     var currLoc = this.loc;
     var trans = [newPos[0],0,newPos[1],0];
@@ -22,6 +24,7 @@ Character.prototype.move = function(newPos){
 };
 
 Character.prototype.isLegal = function(trans){
+    return true;
     trans = vec4.add(trans,this.loc,vec4.create());
     return (Math.abs(trans[0]) +Math.abs(trans[2]) < pyramid.height);
 };
