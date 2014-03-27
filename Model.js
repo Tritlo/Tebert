@@ -1,5 +1,6 @@
 function Model(descr){
     this.setup(descr);
+    this.type = "Model";
 }
 
 Model.prototype.setup = function(descr){
@@ -13,6 +14,47 @@ Model.prototype.setup = function(descr){
     this.objMatr = this.objMatr ||  mat4.identity(mat4.create());
     this.translate(this.loc);
     this.init();
+    this.glInitialized = false;
+};
+
+Model.prototype.glInit = function(gl){
+    this.texCoords = [[0,0],[0,1],[1,1],[1,0]] || this.texCoords;
+    this.texCoordsArray = [];
+    //A shoddy hack
+    var texs =    [ 0, 1, 2, 0, 2, 3 ];
+    //for(var i = 0; i < this.polys.length; ++i){
+    for(var i = 0; i < this.points.length; ++i){
+	//var p = this.polys[i];
+	//var indices = [p[0], p[1], p[2], p[0], p[2], p[3]];
+	//for ( var j = 0; j < indices.length; ++j ) {
+	    this.texCoordsArray.push(this.texCoords[texs[i%6]]);
+    }
+    if(this.textureSrc){
+	this.initTexture(gl);
+    }
+    this.glInitialized = true;
+};
+
+Model.prototype.initTexture = function(gl){
+	this.texture = gl.createTexture();
+	this.image = new Image();
+        var cbe = this;
+	this.image.onload = function() {
+	    console.log("loaded");
+	    cbe.configureTexture(gl);
+	};
+	this.image.src = this.textureSrc;
+};
+
+Model.prototype.configureTexture = function(gl){
+    gl.bindTexture( gl.TEXTURE_2D, this.texture );
+    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, 
+                      gl.NEAREST_MIPMAP_LINEAR );
+    gl.generateMipmap( gl.TEXTURE_2D );
+    gl.activeTexture( gl.TEXTURE0 );
+    gl.bindTexture( gl.TEXTURE_2D, null);
 };
 
 Model.prototype.init = function (){
@@ -57,7 +99,8 @@ Model.prototype.modelCopy = function() {
 Model.prototype.getData = function(){
     var m =  {"points": this.points,
 	      "normals": this.normals,
-	      "polys": this.pols};
+	      "polys": this.pols,
+	      "textureSrc": this.textureSrc};
     /*
     //Uncomment this to create actual copies,
      // Not just pointers.
@@ -87,8 +130,13 @@ Model.prototype.setColor = function(color){
     }
 };
 
-
 Model.prototype.render = function(gl,transformMatrix){
+    if(!this.glInitialized){
+	this.glInit(gl);
+    }
+    if(!this.texture){
+	this.texture = createSolidTexture([1.0,1.0,1.0,1.0],gl);
+    }
     if(!transformMatrix){
 	var transformMatrix = mat4.identity(mat4.create());
     };
@@ -116,13 +164,14 @@ Model.prototype.render = function(gl,transformMatrix){
 		   gl.STATIC_DRAW );
     gl.vertexAttribPointer( gl.vNormal, 4, gl.FLOAT, false, 0, 0 );
 
-    /*gl.activeTexture(gl.TEXTURE0);
+    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture( gl.TEXTURE_2D, this.texture );
     gl.bindBuffer( gl.ARRAY_BUFFER, gl.tBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray),
-     gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray), gl.STATIC_DRAW );
+
     gl.vertexAttribPointer( gl.vTex, 2, gl.FLOAT, false, 0, 0 );
-     */
+
+
     gl.drawArrays( gl.TRIANGLES, 0, this.points.length);
 };
 
@@ -131,13 +180,13 @@ Model.prototype.render = function(gl,transformMatrix){
 Model.prototype.isVisited = false;
 
 Model.prototype.markVisited = function(){
-    var yellow= [1.0,1.0,0.0,1.0];
-    this.setColor(yellow);
+    var white= [1.0,1.0,1.0,1.0];
+    this.setColor(white);
     this.isVisited = true;
 };
 
 Model.prototype.markUnVisited = function(){
-    var blue = [0.0,0.0,1.0,1.0];
+    var blue = [0.5,0.5,0.5,1.0];
     this.setColor(blue);
     this.isVisited = false;
 };

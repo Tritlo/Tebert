@@ -1,17 +1,18 @@
 function Tebert(descr){
-    this.__proto__.setup("monkey.ply");
+    var d  = plyReader.getData("monkey.ply");
+    d.textureSrc = "fur.png";
+    this.__proto__.setup(d);
     this.setup(descr);
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
-    this.setColor(this.color || [1.0,0.0,0.0,1.0]);
+    this.setColor(this.color || [1.0,1.0,1.0,1.0]);
     this.scale([0.3,0.3,0.3]);
 };
 
 Tebert.prototype = new Character();
 
 Tebert.prototype.onAnimEnd = function(loc){
-    //pyramid.markVisit(loc[0],loc[2]);
     pyramid.visit(loc[0],loc[2]);
 };
 

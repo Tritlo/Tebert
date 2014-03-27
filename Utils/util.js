@@ -51,13 +51,14 @@ function AzElView(azimuth, elevation, location,log){
 
 };
 
-function createSolidTexture(color) {
+function createSolidTexture(color,outergl) {
+    if(outergl) 
+	var gl = outergl;
     color[0]*= 255;
     color[1]*= 255;
     color[2]*= 255;
     color[3]*= 255;
     var data = new Uint8Array(color);
-    console.log(color);
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);

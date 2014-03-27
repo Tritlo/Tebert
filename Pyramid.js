@@ -73,7 +73,7 @@ Pyramid.prototype.getCube = function(x,y) {
 
 
 Pyramid.prototype.init = function() {
-    this.protoCube = this.protoCube || new Cube();
+    this.protoCube = this.protoCube || new Cube({"textureSrc": "cardboard.png"});
     //this.protoCube =  new Cube();
     this.height = this.height || 4;
     this.cubes = [];
@@ -83,7 +83,7 @@ Pyramid.prototype.init = function() {
         this.cubes[i] = [];
         for (var j = 0; j < length+1; j++) {
             if (this.manhattanDist(i,j) < this.height) {
-                this.cubes[i][j] = protoCube.modelCopy();
+                this.cubes[i][j] = this.protoCube.modelCopy();
                 //this.cubes[i][j] = new Cube();
                 this.cubes[i][j].scale([0.5,0.5,0.5]);
 		this.cubes[i][j].markUnVisited();
