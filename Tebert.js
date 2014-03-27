@@ -16,8 +16,14 @@ Tebert.prototype.onAnimStart = function(currloc,nextloc){
     rotateTo(nextloc[0],nextloc[2]);
 }
 
+Tebert.prototype.kill = function() {
+    console.log('DEAD');
+    this.addMove([-this.loc[0], -this.loc[2]]);
+};
+
 Tebert.prototype.onAnimEnd = function(currloc,prevloc){
     pyramid.visit(currloc[0],currloc[2]);
+    entityManager.checkCollisions();
 };
 
 Tebert.prototype.keys = function(keyPressed){

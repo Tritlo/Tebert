@@ -71,6 +71,10 @@ Pyramid.prototype.getCube = function(x,y) {
     return this.cubes[x+this.height-1][y+this.height-1];
 }
 
+Pyramid.prototype.isOutOfBounds = function(x,y) {
+    return manhattanDist(Math.round(x), Math.round(y))  >= this.height;
+}
+
 
 Pyramid.prototype.init = function() {
     this.protoCube = this.protoCube || new Cube({"textureSrc": "cardboard.png"});
