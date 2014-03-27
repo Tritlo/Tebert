@@ -1,3 +1,5 @@
+var modelDataCache = {};
+
 function Model(descr){
     this.setup(descr);
     this.type = "Model";
@@ -5,7 +7,16 @@ function Model(descr){
 
 Model.prototype.setup = function(descr){
     if(typeof(descr) === "string"){
-	descr = plyReader.getData(descr);
+	var name = descr;
+	this.modelName = name;
+	if(modelDataCache[name]){
+	    descr = modelDataCache[name];
+	}
+	else{
+	    descr = plyReader.getData(name);
+	    descr.modelName = name;
+	    modelDataCache[name] = descr;
+	}
     }
     for(var prop in descr){
 	this[prop] =  descr[prop];
@@ -15,6 +26,7 @@ Model.prototype.setup = function(descr){
     this.translate(this.loc);
     this.init();
     this.glInitialized = false;
+    this.colorsNeedUpdate = true;
 };
 
 Model.prototype.glInit = function(gl){
@@ -29,9 +41,41 @@ Model.prototype.glInit = function(gl){
 	//for ( var j = 0; j < indices.length; ++j ) {
 	    this.texCoordsArray.push(this.texCoords[texs[i%6]]);
     }
+
+    if(!this.vBuffer){
+	this.vBuffer = gl.createBuffer();
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
+	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.points)),
+		       gl.STATIC_DRAW );
+    }
+
+    if(!this.nBuffer){
+	this.nBuffer = gl.createBuffer();
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
+	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.normals)),
+		       gl.STATIC_DRAW );
+    }
+
+    if(!this.cBuffer){
+	this.cBuffer = gl.createBuffer();
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
+	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.colors)),
+		       gl.STATIC_DRAW );
+    }
+    
+    if(!this.tBuffer){
+	this.tBuffer = gl.createBuffer();
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.tBuffer );
+	gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray),
+		       gl.STATIC_DRAW );
+    }
+
+    this.colorsNeedUpdate = false;
+
     if(this.textureSrc){
 	this.initTexture(gl);
     }
+
     this.glInitialized = true;
 };
 
@@ -99,6 +143,7 @@ Model.prototype.rotate= function(angle,axis){
 //Points, normals and pols
 Model.prototype.modelCopy = function() {
     var m = this.getData();
+    /* TURN OFF IF CHANGIN THESE PARAMETERS IN NEW MODEL */
     return new Model(m);
 };
 
@@ -106,7 +151,12 @@ Model.prototype.getData = function(){
     var m =  {"points": this.points,
 	      "normals": this.normals,
 	      "polys": this.pols,
-	      "textureSrc": this.textureSrc};
+	      "textureSrc": this.textureSrc,
+	      "nBuffer" : this.nBuffer,
+	      "vBuffer" : this.vBuffer,
+	      "tBuffer" : this.tBuffer
+	     };
+
     /*
     //Uncomment this to create actual copies,
      // Not just pointers.
@@ -134,15 +184,31 @@ Model.prototype.setColor = function(color){
 	this.vertexColors.push(color);
         this.colors.push( color );
     }
+    //We do not have access to gl here.
+    this.colorsNeedUpdate = true;
+};
+
+Model.prototype.updateColorBuffer = function(gl){
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.colors)),
+		   gl.STATIC_DRAW );
+
+    this.colorsNeedUpdate = false;
+
 };
 
 Model.prototype.render = function(gl,transformMatrix){
+    //Most of these happen only once
     if(!this.glInitialized){
 	this.glInit(gl);
     }
     if(!this.texture){
 	this.texture = createSolidTexture([1.0,1.0,1.0,1.0],gl);
     }
+    if(this.colorsNeedUpdate){
+	this.updateColorBuffer(gl);
+    }
+
     if(!transformMatrix){
 	var transformMatrix = mat4.identity(mat4.create());
     };
@@ -152,29 +218,23 @@ Model.prototype.render = function(gl,transformMatrix){
 	false,
 	mat4.multiply(transformMatrix,this.objMatr,mat4.create())
     );
+
     if(gl.vColor && gl.vColor > 0){
-	gl.bindBuffer( gl.ARRAY_BUFFER, gl.cBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.colors)),
-		       gl.STATIC_DRAW );
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
 	gl.vertexAttribPointer( gl.vColor, 4, gl.FLOAT, false, 0, 0 );
     }
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, gl.vBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.points)),
-		   gl.STATIC_DRAW );
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
     gl.vertexAttribPointer( gl.vPosition, 4, gl.FLOAT, false, 0, 0 );
 
     
-    gl.bindBuffer( gl.ARRAY_BUFFER, gl.nBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.normals)),
-		   gl.STATIC_DRAW );
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
     gl.vertexAttribPointer( gl.vNormal, 4, gl.FLOAT, false, 0, 0 );
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture( gl.TEXTURE_2D, this.texture );
-    gl.bindBuffer( gl.ARRAY_BUFFER, gl.tBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray), gl.STATIC_DRAW );
 
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.tBuffer );
     gl.vertexAttribPointer( gl.vTex, 2, gl.FLOAT, false, 0, 0 );
 
 

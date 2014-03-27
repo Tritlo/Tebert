@@ -6,14 +6,16 @@ function Ball(descr){
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
     this.setColor(this.color || [1.0,0.0,1.0,1.0]);
-    this.scale([0.8,0.8,0.8]);
+    //this.scale([0.8,0.8,0.8]);
+    this.scale([0.4,0.4,0.4]);
+    this.type = "Ball";
 };
 
 Ball.prototype = new Character();
 
 Ball.prototype.isDeadly = true;
 
-Ball.prototype.onAnimEnd = function(loc){
+Ball.prototype.onAnimEnd = function(currloc,prevloc){
     entityManager.checkCollisions();
     entityManager.killOutOfBounds();
 };

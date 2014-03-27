@@ -4,8 +4,8 @@ var theta = [ 0, 0, 0 ];
 var temptheta = [ 0, 0, 0 ];
 var spin = [0,0,0];
 
-//var lowdef = true;
-var lowdef = false;
+var lowdef = true;
+//var lowdef = false;
 //var eye = vec3.create([0.0,0.0,2.0]);
 var eye = vec3.create([6.0,6.0,6.0]);
 var at = vec3.create([0.0,-2.0,0.0]);
@@ -60,9 +60,9 @@ window.onload = function init() {
     var program = loadShaders( gl, "vshader.glsl" , "fshader.glsl" );
     
     gl.useProgram( program );
-    gl.cBuffer = gl.createBuffer();
-    gl.nBuffer = gl.createBuffer();
-    gl.vBuffer = gl.createBuffer();
+    //gl.cBuffer = gl.createBuffer();
+    //gl.nBuffer = gl.createBuffer();
+    //gl.vBuffer = gl.createBuffer();
 
     gl.vNormal = gl.getAttribLocation( program, "vNormal" );
     gl.vTex = gl.getAttribLocation( program, "vTexCoord" );
@@ -74,10 +74,10 @@ window.onload = function init() {
 	gl.enableVertexAttribArray( gl.vColor );
     }
     gl.enableVertexAttribArray( gl.vNormal );
+    gl.enableVertexAttribArray( gl.vTex );
     gl.enableVertexAttribArray( gl.vPosition );
 
-    gl.tBuffer = gl.createBuffer();
-    gl.enableVertexAttribArray( gl.vTex );
+    //gl.tBuffer = gl.createBuffer();
     
     gl.lineWidth(3);
 
@@ -108,10 +108,11 @@ window.onload = function init() {
     //cube2 = new Cube();
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
-    tebert = new Tebert({"loc":[0,0.5,0,1], "color": [0.5,0.5,0.5,1.0]});
+    //tebert = new Tebert({"loc":[0,0.5,0,1], "color": [0.5,0.5,0.5,1.0]});
     pyramid = new Pyramid();
-    ball = new Ball({"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,1.0]});
-    entityManager.generateSam();
+    entityManager.init();
+    //ball = new Ball({"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,1.0]});
+    //entityManager.generateSam();
     start();
 };
 
@@ -156,6 +157,7 @@ function startRotate(newRot){
 function start(){
     //tebert.translate([0.0,1.0,0.0]);
     //cube.scale([0.5,0.5,0.5]);
+    //ball.scale([0.5,0.5,0.5]);
     //cube.translate([0,0,0]);
     //cube.swapColor();
     //cube.swapColor();
@@ -181,7 +183,7 @@ function update(dt) {
     //
     var du = (dt / NOMINAL_UPDATE_INTERVAL);
     entityManager.update(du);
-    tebert.update(du);
+    //tebert.update(du);
     if(targetRot != theta[0] % 360){
 	theta[0] += rotToAdd;
    }
@@ -230,8 +232,9 @@ function render()
     gl.uniformMatrix4fv(gl.mVMLoc,false,modelViewM);
     gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
 
-    tebert.render(gl);
+    //tebert.render(gl);
     pyramid.render(gl);
     entityManager.render(gl);
+
 }
 

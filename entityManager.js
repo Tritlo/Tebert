@@ -1,26 +1,4 @@
-/*
-
-entityManager.js
-
-A module which handles arbitrary entity-management for "Asteroids"
-
-
-We create this module as a single global object, and initialise it
-with suitable 'data' and 'methods'.
-
-"Private" properties are denoted by an underscore prefix convention.
-
-*/
-
-
 "use strict";
-
-
-// Tell jslint not to complain about my use of underscore prefixes (nomen),
-// my flattening of some indentation (white), or my use of incr/decr ops 
-// (plusplus).
-//
-/*jslint nomen: true, white: true, plusplus: true*/
 
 
 var entityManager = {
@@ -45,24 +23,35 @@ spawnBallCountDown : 600,
 //
 
 init: function() {
-    
+    this.generateTebert({"loc":[0,0.5,0,1], "color": [0.5,0.5,0.5,1.0]});
+    var protoBall = new Ball({"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,0.0]});
+    this.protoBallData = protoBall.modelCopy();
 },
 
 
 generateBall : function(descr) {
-    this._entities.push(new Ball({"loc":[0,1.5,0,1], "color": [1.0,0.0,0.0,0.0]}));
+    var bd = {"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,0.0]};
+    //for(var k in this.protoBallData)
+	//bd[k] = this.protoBallData[k];
+    var b = new Ball(bd);
+    this._entities.push(b);
 },
 
 generateSam : function(descr) {
-    this._entities.push(new Sam({"loc":[0,1.5,0,1], "color": [1.0,0.0,1.0,0.0]}));
+    this._entities.push(new Sam({"loc":[0,0.5,0,1], "color": [1.0,0.0,1.0,0.0]}));
 },
 
 generateTebert : function(descr) {
     var t = new Tebert(descr);
-    this._entites.push(new Tebert());
+    this._entities.push(t);
 },
 
+getTebert : function(){
+    var t = this._entities[0];
+    return t;
+},
 checkCollisions : function() {
+    var tebert = this.getTebert();
     for (var i = 0; i < this._entities.length; i++) {
         var entity = this._entities[i];
         if (entity.isDeadly && entity.loc[0] === tebert.loc[0] && entity.loc[2] === tebert.loc[2])
@@ -109,6 +98,6 @@ render: function(gl,transformMatrix) {
         this._entities[i].render(gl,transformMatrix);
 }
 
-}
+};
 
 

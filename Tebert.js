@@ -9,21 +9,24 @@ function Tebert(descr){
     this.currentTrans = [0,0,0,0];
     this.setColor(this.color || [1.0,1.0,1.0,1.0]);
     this.scale([0.3,0.3,0.3]);
+    this.type = "Tebert";
 };
 
 Tebert.prototype = new Character();
 Tebert.prototype.onAnimStart = function(currloc,nextloc){
     rotateTo(nextloc[0],nextloc[2]);
-}
+};
 
 Tebert.prototype.kill = function() {
     console.log('DEAD');
+    this.moveQueue = [];
     this.addMove([-this.loc[0], -this.loc[2]]);
 };
 
 Tebert.prototype.onAnimEnd = function(currloc,prevloc){
     pyramid.visit(currloc[0],currloc[2]);
     entityManager.checkCollisions();
+    entityManager.killOutOfBounds();
 };
 
 Tebert.prototype.keys = function(keyPressed){

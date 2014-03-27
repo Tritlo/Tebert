@@ -178,9 +178,20 @@ var PlyReader =(function(){
 	    }
 	    return model;
 	},
-	getData: function(file){
+	getData: function(file,gl){
 	    var data = loadFile(file);
 	    var parsed = this.parse(data);
+	    if(gl){
+		parsed.vBuffer = gl.createBuffer();
+		parsed.nBuffer = gl.createBuffer();
+		gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
+		gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(parsed.points)),
+			       gl.STATIC_DRAW );
+		gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
+		gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(parsed.normals)),
+			       gl.STATIC_DRAW );
+		parsed.numPoints = parsed.points.length;
+	    }
 	    return parsed;
 	},
 	//works both in node.js and on web.
