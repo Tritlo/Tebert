@@ -2,6 +2,7 @@
 
 function handleKeyDown(evt){
     var keys = {};
+    var tebert = entityManager.getTebert();
     keycode = {
 	73: function () { //i
 	    tebert.keys("i");

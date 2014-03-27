@@ -1,3 +1,5 @@
+var modelDataCache = {};
+
 function Model(descr){
     this.setup(descr);
     this.type = "Model";
@@ -5,7 +7,16 @@ function Model(descr){
 
 Model.prototype.setup = function(descr){
     if(typeof(descr) === "string"){
-	descr = plyReader.getData(descr);
+	var name = descr;
+	this.modelName = name;
+	if(modelDataCache[name]){
+	    descr = modelDataCache[name];
+	}
+	else{
+	    descr = plyReader.getData(name);
+	    descr.modelName = name;
+	    modelDataCache[name] = descr;
+	}
     }
     for(var prop in descr){
 	this[prop] =  descr[prop];
