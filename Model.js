@@ -79,13 +79,19 @@ Model.prototype.translate = function(t){
 };
 
 Model.prototype.scale= function(s){
+    var loc = this.loc.slice(0);
+    this.translate(vec4.negate(loc,vec4.create()));
     var funcMatr = mat4.scale(mat4.identity(mat4.create()),s);
     this.updateObjM(funcMatr);
+    this.translate(loc);
 };
 
 Model.prototype.rotate= function(angle,axis){
+    var loc = this.loc.slice(0);
+    this.translate(vec4.negate(loc,vec4.create()));
     var funcMatr = mat4.rotate(mat4.identity(mat4.create()),angle,axis);
     this.updateObjM(funcMatr);
+    this.translate(loc);
     this.loc = mat4.multiplyVec4(funcMatr,this.loc);
 };
 

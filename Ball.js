@@ -1,11 +1,12 @@
 function Ball(descr){
-    this.__proto__.setup("newsphere.ply");
+    var modelFile = (lowdef) ? "sphere.ply" : "newsphere.ply";
+    this.__proto__.setup(modelFile);
     this.setup(descr);
-    this.rotate(Math.PI,[0,1,0]);
+    //this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
     this.setColor(this.color || [1.0,0.0,1.0,1.0]);
-    this.scale([0.3,0.3,0.3]);
+    this.scale([0.8,0.8,0.8]);
 };
 
 Ball.prototype = new Character();

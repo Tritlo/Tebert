@@ -1,5 +1,6 @@
 function Tebert(descr){
-    var d  = plyReader.getData("head.ply");
+    var modelFile = (lowdef) ? "monkey.ply" : "head.ply";
+    var d = plyReader.getData(modelFile);
     d.textureSrc = "fur.png";
     this.__proto__.setup(d);
     this.setup(descr);
@@ -11,9 +12,12 @@ function Tebert(descr){
 };
 
 Tebert.prototype = new Character();
+Tebert.prototype.onAnimStart = function(currloc,nextloc){
+    rotateTo(nextloc[0],nextloc[2]);
+}
 
-Tebert.prototype.onAnimEnd = function(loc){
-    pyramid.visit(loc[0],loc[2]);
+Tebert.prototype.onAnimEnd = function(currloc,prevloc){
+    pyramid.visit(currloc[0],currloc[2]);
 };
 
 Tebert.prototype.keys = function(keyPressed){

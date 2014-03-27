@@ -26,10 +26,10 @@ Character.prototype.isLegal = function(trans){
     return (Math.abs(trans[0]) +Math.abs(trans[2]) < pyramid.height);
 };
 
-Character.prototype.onAnimEnd = function(loc){
+Character.prototype.onAnimEnd = function(currloc,nextloc){
     //Callback on anim end
 };
-Character.prototype.onAnimStart = function(loc){
+Character.prototype.onAnimStart = function(currloc,prevloc){
     //Callback on anim start
 };
 
@@ -61,7 +61,8 @@ Character.prototype.startAnim = function(trans){
     }
 
     this.animating = true;
-    this.onAnimStart(vec4.round(this.loc));
+    this.onAnimStart(vec4.round(this.loc),vec4.round(
+	vec4.add(this.loc,trans,vec4.create())));
 };
 
 Character.prototype.halfAnim = function(){
@@ -76,9 +77,10 @@ Character.prototype.halfAnim = function(){
 
 Character.prototype.endAnim = function(){
     this.animating = false;
+    this.onAnimEnd(vec4.round(this.loc),vec4.round(
+	vec4.subtract(this.loc,this.currentTrans,vec4.create())));
     this.currentTrans = [0,0,0,0];
     this.transPart = [0,0,0,0];
-    this.onAnimEnd(vec4.round(this.loc));
 };
 
 Character.prototype.animate = function(){
