@@ -16,6 +16,7 @@ Sam.prototype.onAnimEnd = function(loc){
 
 Sam.prototype.kill = function() {
     // this.addMove([-this.loc[0], -this.loc[2]]);
+    this.isDead = true;
 };
 
 
@@ -27,17 +28,12 @@ Sam.prototype.update = function(du) {
     Character.prototype.update.call(this,du);
     this.countDown -= du;
     if (this.countDown < 0) {
-    var move = this.getRandMove();
-	var distFMid = Math.abs(this.loc[0]) + Math.abs(this.loc[2]);
-        if (Math.round(distFMid) == pyramid.height - 1){
-	        return entityManager.KILL_ME_NOW;
-	   } 
-       else {
-            this.countDown = this.waitTime;
-	        var move = this.getRandMove();
-	        this.addMove(move);
-	   }
+        this.countDown = this.waitTime;
+        var move = this.getRandMove();
+        this.addMove(move);
     }
+
+    if (this.isDead) return entityManager.KILL_ME_NOW;
     
 };
 
@@ -51,6 +47,7 @@ Sam.prototype.getRandMove = function() {
     if (pyramid.isOutOfBounds(this.loc[0] + move[0], this.loc[2] + move[1]))  {
         move[0] *= -1; // Don't kill yourself
         move[1] *= -1; 
+        console.log(this.loc, move);
     }
 
     return move;

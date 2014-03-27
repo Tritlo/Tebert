@@ -72,8 +72,7 @@ Pyramid.prototype.getCube = function(x,y) {
 }
 
 Pyramid.prototype.isOutOfBounds = function(x,y) {
-    console.log(manhattanDist(x,y)  >= this.height-1); 
-    return manhattanDist(x,y)  >= this.height-1;
+    return manhattanDist(Math.round(x), Math.round(y))  >= this.height;
 }
 
 

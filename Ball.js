@@ -14,10 +14,11 @@ Ball.prototype.isDeadly = true;
 
 Ball.prototype.onAnimEnd = function(loc){
     entityManager.checkCollisions();
+    entityManager.killOutOfBounds();
 };
 
 Ball.prototype.kill = function() {
-    // this.addMove([-this.loc[0], -this.loc[2]]);
+    this.isDead = true;
 };
 
 
@@ -30,18 +31,11 @@ Ball.prototype.update = function(du) {
     this.countDown -= du;
     var move = this.getRandMove();
     if (this.countDown < 0) {
-	var distFMid = Math.abs(this.loc[0]) + Math.abs(this.loc[2]);
-        if (Math.round(distFMid) == pyramid.height - 1){
-            this.countDown = this.waitTime*2;
-	        return entityManager.KILL_ME_NOW;
-	   } 
-       else {
-            this.countDown = this.waitTime;
+        this.countDown = this.waitTime;
 	    var move = this.getRandMove();
 	    this.addMove(move);
-	   }
     }
-    
+    if (this.isDead) return entityManager.KILL_ME_NOW;
 };
 
 Ball.prototype.getRandMove = function() {

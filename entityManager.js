@@ -70,6 +70,16 @@ checkCollisions : function() {
     }
 },
 
+killOutOfBounds : function(x,y) {
+    for (var i = 0; i < this._entities.length; i++) {
+        var entity = this._entities[i];
+        if (!entity.loc)
+            console.log(entity);
+        if (pyramid.isOutOfBounds(entity.loc[0], entity.loc[2]))
+            entity.kill();
+    }
+},
+
 update: function(du) {
     var i = 0;
     while (i < this._entities.length) {
