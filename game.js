@@ -60,9 +60,9 @@ window.onload = function init() {
     var program = loadShaders( gl, "vshader.glsl" , "fshader.glsl" );
     
     gl.useProgram( program );
-    gl.cBuffer = gl.createBuffer();
-    gl.nBuffer = gl.createBuffer();
-    gl.vBuffer = gl.createBuffer();
+    //gl.cBuffer = gl.createBuffer();
+    //gl.nBuffer = gl.createBuffer();
+    //gl.vBuffer = gl.createBuffer();
 
     gl.vNormal = gl.getAttribLocation( program, "vNormal" );
     gl.vTex = gl.getAttribLocation( program, "vTexCoord" );
@@ -74,10 +74,10 @@ window.onload = function init() {
 	gl.enableVertexAttribArray( gl.vColor );
     }
     gl.enableVertexAttribArray( gl.vNormal );
+    gl.enableVertexAttribArray( gl.vTex );
     gl.enableVertexAttribArray( gl.vPosition );
 
-    gl.tBuffer = gl.createBuffer();
-    gl.enableVertexAttribArray( gl.vTex );
+    //gl.tBuffer = gl.createBuffer();
     
     gl.lineWidth(3);
 
