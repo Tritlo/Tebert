@@ -25,6 +25,10 @@ function randInt(start, end) {
     return Math.floor(start + Math.random() * (end - start))
 }
 
+function manhattanDist(x,y) {
+    return Math.abs(x) + Math.abs(y);
+}
+
 
 /*
 N: modelViewM = AzElView(azim,elev,loc)

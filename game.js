@@ -30,7 +30,7 @@ var shouldUpdate = true;
 var shouldSingleStep = false;
 
 var pyramid;
-var ball;
+var entityManager;
 var tebert;
 var plyReader = PlyReader();
 
@@ -109,13 +109,12 @@ window.onload = function init() {
     tebert = new Tebert({"loc":[0,1.5,0,1], "color": [0.5,0.5,0.5,1.0]});
     pyramid = new Pyramid();
     pyramid.visit(0,0);
-    ball = new Ball({"loc":[0,1.5,0,1], "color": [1.0,0.0,1.0,0.0]});
+    entityManager.generateSam();
     start();
 };
 
 function start(){
     //tebert.translate([0.0,1.0,0.0]);
-    ball.scale([0.5,0.5,0.5]);
     //cube.scale([0.5,0.5,0.5]);
     //cube.translate([0,0,0]);
     //cube.swapColor();
@@ -141,7 +140,7 @@ function update(dt) {
     // giving us a conveniently scaled "du" to work with.
     //
     var du = (dt / NOMINAL_UPDATE_INTERVAL);
-    ball.update(du);
+    entityManager.update(du);
     tebert.update(du);
 }
 
@@ -190,6 +189,6 @@ function render()
 
     tebert.render(gl);
     pyramid.render(gl);
-    ball.render(gl);
+    entityManager.render(gl);
 }
 

@@ -12,8 +12,14 @@ function Tebert(descr){
 
 Tebert.prototype = new Character();
 
+Tebert.prototype.kill = function() {
+    console.log('DEAD');
+    this.addMove([-this.loc[0], -this.loc[2]]);
+};
+
 Tebert.prototype.onAnimEnd = function(loc){
     pyramid.visit(loc[0],loc[2]);
+    entityManager.checkCollisions();
 };
 
 Tebert.prototype.keys = function(keyPressed){
