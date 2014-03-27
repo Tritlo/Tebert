@@ -1,5 +1,5 @@
 function Tebert(descr){
-    var d  = plyReader.getData("monkey.ply");
+    var d  = plyReader.getData("head.ply");
     d.textureSrc = "fur.png";
     this.__proto__.setup(d);
     this.setup(descr);

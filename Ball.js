@@ -1,5 +1,5 @@
 function Ball(descr){
-    this.__proto__.setup("monkey.ply");
+    this.__proto__.setup("newsphere.ply");
     this.setup(descr);
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
