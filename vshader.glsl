@@ -24,7 +24,7 @@ void main()
     fL = normalize( (modelViewMatrix*lightPosition).xyz - pos);
 
 
-    //texCoord = vTexCoord;
+    texCoord = vTexCoord;
     color = vColor;
     gl_Position = projectionMatrix*modelViewMatrix*objectMatrix*vPosition;
 } 

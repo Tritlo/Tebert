@@ -45,17 +45,20 @@ var PlyReader =(function(){
 	    // Read header
 	    while(data.length)
 	    {
-	      var retval = data.match(/.*/);
-	      var str = retval[0];
-	      data = data.substr(data.indexOf("\n")+1);
-	      retval = str.match(/element (\w+) (\d+)/);
+	      // var retval = data.match(/.*/);
+	      //var str = retval[0];
+	      nl = data.indexOf("\n")+1;
+              line = data.substr(0,nl-1);
+	      data = data.substr(nl);
+		
+	      retval = line.match(/element (\w+) (\d+)/);
 	      if(retval)
 	      {
 		if(retval[1] == "vertex") var npoints = parseInt(retval[2]);
 		if(retval[1] == "face") var npolys = parseInt(retval[2]);
 	      }
-	      if(str == "property float nx") hasNormal = true;
-	      if(str == "end_header") break;
+	      if(line == "property float nx") hasNormal = true;
+	      if(line == "end_header") break;
 	    }
 
 	    // Read points
@@ -64,12 +67,14 @@ var PlyReader =(function(){
 	    var vertices = [];
 	    var vertexNormals = [];
 	    var vNorms = [];
+	    var retval,nl,line;
 	    for (var i = 0; i < npoints; i++) 
 	    {
-		retval = data.match(/([\d.-]+ ?)+/);
-		str = retval[0];
-		data = data.substr(data.indexOf("\n")+1);
-		retval = str.match(/([\d.-]+)/g);
+		nl = data.indexOf("\n")+1;
+		line = data.substr(0,nl-1);
+		data = data.substr(nl);
+
+		retval = line.split(" ");
 		var point = new point3D(parseFloat(retval[0]),
 					parseFloat(retval[1]),
 					parseFloat(retval[2]));
@@ -93,10 +98,11 @@ var PlyReader =(function(){
 	    var newVertices = [];
 	    for (var i = 0; i < npolys; i++) 
 	    {
-		retval = data.match(/(\d+ ?)+/);
-		str = retval[0];
-		data = data.substr(data.indexOf("\n")+1);
-		retval = str.match(/(\d+)/g);
+		nl = data.indexOf("\n")+1;
+		line = data.substr(0,nl-1);
+		data = data.substr(nl);
+
+		retval = line.split(" ");
 		var nvertex = parseInt(retval[0]);
 		var indices = [];
 		for(var j = 0; j < nvertex; j++)
@@ -172,9 +178,20 @@ var PlyReader =(function(){
 	    }
 	    return model;
 	},
-	getData: function(file, callback){
+	getData: function(file,gl){
 	    var data = loadFile(file);
 	    var parsed = this.parse(data);
+	    if(gl){
+		parsed.vBuffer = gl.createBuffer();
+		parsed.nBuffer = gl.createBuffer();
+		gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
+		gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(parsed.points)),
+			       gl.STATIC_DRAW );
+		gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
+		gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(parsed.normals)),
+			       gl.STATIC_DRAW );
+		parsed.numPoints = parsed.points.length;
+	    }
 	    return parsed;
 	},
 	//works both in node.js and on web.
