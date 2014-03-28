@@ -4,8 +4,8 @@ var theta = [ 0, 0, 0 ];
 var temptheta = [ 0, 0, 0 ];
 var spin = [0,0,0];
 
-//var lowdef = true;
-var lowdef = false;
+var lowdef = true;
+//var lowdef = false;
 //var eye = vec3.create([0.0,0.0,2.0]);
 var eye = vec3.create([6.0,6.0,6.0]);
 var at = vec3.create([0.0,-2.0,0.0]);
@@ -116,26 +116,25 @@ window.onload = function init() {
     start();
 };
 
-function rotateTo(x,y){
-    var sgnx = sign(x);
-    var sgny = sign(y);
+function rotateTo(from,to){
+    var sgnnext = [sign(to[0]),sign(to[2])];
     var prevRot = theta[0];
     var newRot = 0;
     //Ignore change on middle
-    if(sgnx == 0 || sgny == 0){
+    if(sgnnext[0] == 0 || sgnnext[1] == 0){
 	return;
     }
-    if(sgnx == 1 && sgny == 1){
+    if(sgnnext[0] == 1 && sgnnext[1] == 1){
 	newRot = 0;
     }
-    if(sgnx == -1 && sgny == 1){
+    if(sgnnext[0] == -1 && sgnnext[1] == 1){
 	newRot = 45;
     }
-    if(sgnx == 1 && sgny == -1){
-	newRot = -45;
-    }
-    if(sgnx == -1 && sgny == -1){
+    if(sgnnext[0] == -1 && sgnnext[1] == -1){
 	newRot = 90;
+    }
+    if(sgnnext[0] == 1 && sgnnext[1] == -1){
+	newRot =  135;
     }
    //theta[0] = newRot;
     startRotate(newRot);
@@ -146,12 +145,14 @@ var targetRot = 0;
 function startRotate(newRot){
     targetRot = newRot;
     var diff = newRot - theta[0];
-    /*
-    if(Math.abs(diff) == 180){
-	theta[0] = newRot;
+    var dir = sign(diff);
+    var absdiff = Math.abs(diff);
+    if(absdiff >  90 ){
+	dir *= -1;
     }
-    */
-    rotToAdd = diff/10;
+    rotToAdd = dir*45/10;
+    if(absdiff !== 90 && absdiff !== 45 && absdiff !== 135)
+	theta[0] = newRot;
 }
 
 function start(){
@@ -184,8 +185,12 @@ function update(dt) {
     var du = (dt / NOMINAL_UPDATE_INTERVAL);
     entityManager.update(du);
     //tebert.update(du);
-    if(targetRot != theta[0] % 360){
-	theta[0] += rotToAdd;
+    if(modulus(targetRot,180) != theta[0]){
+	var nt = modulus(theta[0] + rotToAdd,180);
+	theta[0] = nt;
+   } else {
+       rotToAdd = 0;
+       targetRot = theta[0];
    }
 }
 
@@ -214,7 +219,8 @@ function render()
     var rotM = mat4.identity(mat4.create());
     var truetheta = vec3.add(theta,temptheta,vec3.create());
     mat4.rotate(rotM,-2*radians(truetheta[0]),[0,1,0,0]);
-    //mat4.rotate(rotM,-2*radians(truetheta[1]),[1,0,0,0]);
+    //mat4.rotate(rotM,-2*radians(clampRange(truetheta[1],0,12.25)),[1,0,0,0]);
+    mat4.rotate(rotM,-2*radians(truetheta[1]),[1,0,0,0]);
     var neye = vec4.create(eye);
     neye[3] = 1;
     neye = mat4.multiplyVec3(rotM,neye);

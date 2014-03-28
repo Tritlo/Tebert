@@ -22,13 +22,24 @@ function radians( degrees ) {
 }
 
 function randInt(start, end) {
-    return Math.floor(start + Math.random() * (end - start))
+    return Math.floor(start + Math.random() * (end - start));
 }
 
 function manhattanDist(x,y) {
     return Math.abs(x) + Math.abs(y);
 }
 
+function modulus(x,y){
+    return ((x%y) + y) % y;
+}
+
+function clampRange(val,low,high){
+    if(val < low)
+	return low;
+    if(val > high)
+	return high;
+    return val;
+};
 
 /*
 N: modelViewM = AzElView(azim,elev,loc)
