@@ -4,8 +4,8 @@ var theta = [ 0, 0, 0 ];
 var temptheta = [ 0, 0, 0 ];
 var spin = [0,0,0];
 
-var lowdef = true;
-//var lowdef = false;
+//var lowdef = true;
+var lowdef = false;
 //var eye = vec3.create([0.0,0.0,2.0]);
 var eye = vec3.create([6.0,6.0,6.0]);
 var at = vec3.create([0.0,-2.0,0.0]);
