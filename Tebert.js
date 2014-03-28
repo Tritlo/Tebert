@@ -1,8 +1,8 @@
 function Tebert(descr){
     var modelFile = (lowdef) ? "monkey.ply" : "head.ply";
-    var d = plyReader.getData(modelFile);
-    d.textureSrc = "fur.png";
-    this.__proto__.setup(d);
+    //var d = plyReader.getData(modelFile);
+    this.__proto__.setup(modelFile);
+    this.textureSrc = "fur.png";
     this.setup(descr);
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];

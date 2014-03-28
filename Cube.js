@@ -1,8 +1,8 @@
 var protoCube;
 function Cube(descr,data){
-    protoCube = protoCube || plyReader.read("cube.ply");
-    var data = data || protoCube.getData();
-    this.__proto__.setup(data);
+    //protoCube = protoCube || new Model("cube.ply");
+    //var data = data || protoCube.getData();
+    this.__proto__.setup("cube.ply");
     this.setup(descr);
     this.type = "Cube";
 };

@@ -1,4 +1,5 @@
 var modelDataCache = {};
+var textureCache = {};
 
 function Model(descr){
     this.setup(descr);
@@ -9,13 +10,12 @@ Model.prototype.setup = function(descr){
     if(typeof(descr) === "string"){
 	var name = descr;
 	this.modelName = name;
-	if(modelDataCache[name]){
-	    descr = modelDataCache[name];
-	}
+	if(modelDataCache[name]){descr = modelDataCache[name];}
 	else{
 	    descr = plyReader.getData(name);
 	    descr.modelName = name;
 	    modelDataCache[name] = descr;
+	    console.log("Added " + this.modelName + " to cache.");
 	}
     }
     for(var prop in descr){
@@ -30,30 +30,30 @@ Model.prototype.setup = function(descr){
 };
 
 Model.prototype.glInit = function(gl){
-    this.texCoords = [[0,0],[0,1],[1,1],[1,0]] || this.texCoords;
-    this.texCoordsArray = [];
-    //A shoddy hack
-    var texs =    [ 0, 1, 2, 0, 2, 3 ];
-    //for(var i = 0; i < this.polys.length; ++i){
-    for(var i = 0; i < this.points.length; ++i){
-	//var p = this.polys[i];
-	//var indices = [p[0], p[1], p[2], p[0], p[2], p[3]];
-	//for ( var j = 0; j < indices.length; ++j ) {
-	    this.texCoordsArray.push(this.texCoords[texs[i%6]]);
-    }
-
     if(!this.vBuffer){
-	this.vBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.points)),
-		       gl.STATIC_DRAW );
+	if(modelDataCache[this.modelName].vBuffer){
+	    this.vBuffer = modelDataCache[this.modelName].vBuffer;
+	} else {
+	    this.vBuffer =gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER,
+			   new Float32Array(flatten(this.points)),
+			   gl.STATIC_DRAW );
+	    modelDataCache[this.modelName].vBuffer = this.vBuffer;
+	}
     }
 
     if(!this.nBuffer){
-	this.nBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.normals)),
-		       gl.STATIC_DRAW );
+	if(modelDataCache[this.modelName].nBuffer){
+	    this.nBuffer = modelDataCache[this.modelName].nBuffer;
+	} else {
+	    this.nBuffer =gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER,
+			   new Float32Array(flatten(this.normals)),
+			   gl.STATIC_DRAW );
+	    modelDataCache[this.modelName].nBuffer = this.nBuffer;
+	}
     }
 
     if(!this.cBuffer){
@@ -64,10 +64,26 @@ Model.prototype.glInit = function(gl){
     }
     
     if(!this.tBuffer){
-	this.tBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ARRAY_BUFFER, this.tBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray),
-		       gl.STATIC_DRAW );
+	if(modelDataCache[this.modelName].tBuffer){
+	    this.tBuffer = modelDataCache[this.modelName].tBuffer;
+	} else {
+	    this.texCoords = [[0,0],[0,1],[1,1],[1,0]] || this.texCoords;
+	    this.texCoordsArray = [];
+	    //A shoddy hack
+	    var texs =    [ 0, 1, 2, 0, 2, 3 ];
+	    //for(var i = 0; i < this.polys.length; ++i){
+	    for(var i = 0; i < this.points.length; ++i){
+		//var p = this.polys[i];
+		//var indices = [p[0], p[1], p[2], p[0], p[2], p[3]];
+		//for ( var j = 0; j < indices.length; ++j ) {
+		    this.texCoordsArray.push(this.texCoords[texs[i%6]]);
+	    }
+	    this.tBuffer = gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.tBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray),
+			   gl.STATIC_DRAW );
+	    modelDataCache[this.modelName].tBuffer = this.tBuffer;
+	}
     }
 
     this.colorsNeedUpdate = false;
@@ -79,15 +95,26 @@ Model.prototype.glInit = function(gl){
     this.glInitialized = true;
 };
 
+
 Model.prototype.initTexture = function(gl){
-	this.texture = gl.createTexture();
-	this.image = new Image();
-        var cbe = this;
-	this.image.onload = function() {
-	    console.log("loaded");
-	    cbe.configureTexture(gl);
-	};
-	this.image.src = this.textureSrc;
+        if(!textureCache[this.textureSrc]){
+	    this.texture = gl.createTexture();
+	    this.image = new Image();
+	    var cbe = this;
+	    this.image.onload = function() {
+		console.log("loaded");
+		if(!textureCache[cbe.textureSrc]){
+		    cbe.configureTexture(gl);
+		    textureCache[cbe.textureSrc] = cbe.texture;
+		    console.log("Added " + cbe.textureSrc + " to cache.");
+		} else {
+		    cbe.texture = textureCache[cbe.textureSrc]; 
+		}
+	    };
+	    this.image.src = this.textureSrc;
+	} else {
+	   this.texture = textureCache[this.textureSrc]; 
+	}
 };
 
 Model.prototype.configureTexture = function(gl){
@@ -154,9 +181,9 @@ Model.prototype.getData = function(){
 	      "textureSrc": this.textureSrc,
 	      "nBuffer" : this.nBuffer,
 	      "vBuffer" : this.vBuffer,
-	      "tBuffer" : this.tBuffer
+	      "tBuffer" : this.tBuffer,
+	      "modelName" : this.modelName
 	     };
-
     /*
     //Uncomment this to create actual copies,
      // Not just pointers.
@@ -227,7 +254,7 @@ Model.prototype.render = function(gl,transformMatrix){
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
     gl.vertexAttribPointer( gl.vPosition, 4, gl.FLOAT, false, 0, 0 );
 
-    
+   
     gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
     gl.vertexAttribPointer( gl.vNormal, 4, gl.FLOAT, false, 0, 0 );
 
