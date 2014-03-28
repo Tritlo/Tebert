@@ -232,8 +232,8 @@ function render()
 	prevTrueTheta = vec3.create(trueTheta);
 	gl.uniform4fv( gl.lightPos,lp);
 	gl.uniformMatrix4fv(gl.mVMLoc,false,modelViewM);
-	gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
     }
+    gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
     //Setjum sma perspective til ad gera thetta thaeginlegra
     //projectionM = mat4.perspective(45,canvas.width/canvas.height,0.1,100);
 
