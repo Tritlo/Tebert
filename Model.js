@@ -96,20 +96,18 @@ Model.prototype.glInit = function(gl){
 };
 
 
+
 Model.prototype.initTexture = function(gl){
         if(!textureCache[this.textureSrc]){
 	    this.texture = gl.createTexture();
+	    textureCache[this.textureSrc] = this.texture;
 	    this.image = new Image();
 	    var cbe = this;
 	    this.image.onload = function() {
-		console.log("loaded");
-		if(!textureCache[cbe.textureSrc]){
-		    cbe.configureTexture(gl);
-		    textureCache[cbe.textureSrc] = cbe.texture;
-		    console.log("Added " + cbe.textureSrc + " to cache.");
-		} else {
-		    cbe.texture = textureCache[cbe.textureSrc]; 
-		}
+		console.log("loaded " + cbe.textureSrc);
+		cbe.configureTexture(gl);
+		textureCache[cbe.textureSrc] = cbe.texture;
+		console.log("Added " + cbe.textureSrc + " to cache.");
 	    };
 	    this.image.src = this.textureSrc;
 	} else {

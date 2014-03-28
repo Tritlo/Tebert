@@ -14,7 +14,7 @@ function Tebert(descr){
 
 Tebert.prototype = new Character();
 Tebert.prototype.onAnimStart = function(currloc,nextloc){
-    rotateTo(nextloc[0],nextloc[2]);
+    rotateTo(currloc,nextloc);
 };
 
 Tebert.prototype.kill = function() {
