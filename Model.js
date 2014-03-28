@@ -35,8 +35,7 @@ Model.prototype.glInit = function(gl){
 	} else {
 	    this.vBuffer =gl.createBuffer();
 	    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
-	    gl.bufferData( gl.ARRAY_BUFFER,
-			   new Float32Array(flatten(this.points)),
+	    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points),
 			   gl.STATIC_DRAW );
 	   cache.put(this.modelName,"vBuffer",this.vBuffer);
 	}
@@ -48,8 +47,7 @@ Model.prototype.glInit = function(gl){
 	} else {
 	    this.nBuffer =gl.createBuffer();
 	    gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
-	    gl.bufferData( gl.ARRAY_BUFFER,
-			   new Float32Array(flatten(this.normals)),
+	    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.normals),
 			   gl.STATIC_DRAW );
 	   cache.put(this.modelName,"nBuffer",this.nBuffer);
 	}
@@ -176,7 +174,8 @@ Model.prototype.getData = function(){
 	      "nBuffer" : this.nBuffer,
 	      "vBuffer" : this.vBuffer,
 	      "tBuffer" : this.tBuffer,
-	      "modelName" : this.modelName
+	      "modelName" : this.modelName,
+	      "shininess" :this.shininess
 	     };
     /*
     //Uncomment this to create actual copies,
@@ -237,6 +236,7 @@ Model.prototype.render = function(gl,transformMatrix){
 	gl.vertexAttribPointer( gl.vColor, 4, gl.FLOAT, false, 0, 0 );
     }
 
+    gl.uniform1f( gl.shininess,this.shininess || materialShininess );
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
     gl.vertexAttribPointer( gl.vPosition, 4, gl.FLOAT, false, 0, 0 );
 

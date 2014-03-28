@@ -23,14 +23,14 @@ spawnBallCountDown : 600,
 //
 
 init: function() {
-    this.generateTebert({"loc":[0,0.5,0,1], "color": [0.5,0.5,0.5,1.0]});
-    var protoBall = new Ball({"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,0.0]});
+    this.generateTebert({"loc":[0,0.5,0,1]});
+    var protoBall = new Ball({"loc":[0,0.5,0,1]} );
     this.protoBallData = protoBall.modelCopy();
 },
 
 
 generateBall : function(descr) {
-    var bd = {"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,0.0]};
+    var bd = {"loc":[0,0.5,0,1]};
     //for(var k in this.protoBallData)
 	//bd[k] = this.protoBallData[k];
     var b = new Ball(bd);
