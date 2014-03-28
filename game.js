@@ -4,8 +4,7 @@ var theta = [ 0, 0, 0 ];
 var temptheta = [ 0, 0, 0 ];
 var spin = [0,0,0];
 
-var lowdef = true;
-//var lowdef = false;
+var lowdef = false;
 //var eye = vec3.create([0.0,0.0,2.0]);
 var eye = vec3.create([6.0,6.0,6.0]);
 var at = vec3.create([0.0,-2.0,0.0]);
@@ -40,16 +39,12 @@ var distFromEdgeOfScreen = 22;
 window.onload = function init() {
 
     canvas = document.getElementById( "gl-canvas" );
-    canvas.width = window.innerWidth-distFromEdgeOfScreen;
-    canvas.height = window.innerHeight-distFromEdgeOfScreen;
-
     
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
-
+    window.onresize();
     
-    gl.viewport( 0, 0, canvas.width, canvas.height );
     gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
     
     gl.enable(gl.DEPTH_TEST);
@@ -85,6 +80,8 @@ window.onload = function init() {
     gl.pMLoc = gl.getUniformLocation(program, "projectionMatrix");
     gl.objMLoc = gl.getUniformLocation(program, "objectMatrix");
     gl.thetaLoc = gl.getUniformLocation(program, "theta");
+    gl.shininess = gl.getUniformLocation(program, "shininess");
+
 
     ambientProduct =  vec4.mult(lightAmbient, materialAmbient);
     diffuseProduct =  vec4.mult(lightDiffuse, materialDiffuse);
@@ -98,9 +95,6 @@ window.onload = function init() {
        "specularProduct"),specularProduct );	
     gl.uniform4fv( gl.getUniformLocation(program, 
        "lightPosition"),[eye[0],eye[1],eye[2],1]);
-    
-    gl.uniform1f( gl.getUniformLocation(program, 
-       "shininess"),materialShininess );
     
     //plyReader.read("teapot.ply",onModelReady);
     //plyReader.read("cube.ply",onModelReady);
@@ -211,32 +205,36 @@ function main(currTime){
     lastUpdate = thisUpdate;
 };
 
-var prevTrueTheta = vec3.create([0,0,0]);
+var prevTrueTheta = vec3.create([NaN,NaN,NaN]);
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    var rotM = mat4.identity(mat4.create());
-    var truetheta = vec3.add(theta,temptheta,vec3.create());
-    mat4.rotate(rotM,-2*radians(truetheta[0]),[0,1,0,0]);
-    //mat4.rotate(rotM,-2*radians(clampRange(truetheta[1],0,12.25)),[1,0,0,0]);
-    mat4.rotate(rotM,-2*radians(truetheta[1]),[1,0,0,0]);
-    var neye = vec4.create(eye);
-    neye[3] = 1;
-    neye = mat4.multiplyVec3(rotM,neye);
-    neye = vec3.create(neye);
-    if(neye[0] === 0 && neye[1] !== 0 && neye[2] === 0){
-	neye[2] = 0.01;
+    var trueTheta = vec3.add(theta,temptheta,vec3.create());
+    if(trueTheta[0] !== prevTrueTheta[1] || trueTheta[1] !== prevTrueTheta[1])
+    {
+	var rotM = mat4.identity(mat4.create());
+	mat4.rotate(rotM,-2*radians(trueTheta[0]),[0,1,0,0]);
+	//mat4.rotate(rotM,-2*radians(clampRange(truetheta[1],0,12.25)),[1,0,0,0]);
+	mat4.rotate(rotM,-2*radians(trueTheta[1]),[1,0,0,0]);
+	var neye = vec4.create(eye);
+	neye[3] = 1;
+	neye = mat4.multiplyVec3(rotM,neye);
+	neye = vec3.create(neye);
+	if(neye[0] === 0 && neye[1] !== 0 && neye[2] === 0){
+	    neye[2] = 0.01;
+	}
+	var lp = vec4.create(neye);
+	//var lp = vec4.negate(lp);
+	lp[3] = 1;
+	modelViewM = mat4.lookAt(neye,at,up);
+	prevTrueTheta = vec3.create(trueTheta);
+	gl.uniform4fv( gl.lightPos,lp);
+	gl.uniformMatrix4fv(gl.mVMLoc,false,modelViewM);
+	gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
     }
-    var lp = vec4.create(neye);
-    //var lp = vec4.negate(lp);
-    lp[3] = 1;
-    gl.uniform4fv( gl.lightPos,lp);
-    modelViewM = mat4.lookAt(neye,at,up);
     //Setjum sma perspective til ad gera thetta thaeginlegra
-    projectionM = mat4.perspective(45,canvas.width/canvas.height,0.1,100);
-    gl.uniformMatrix4fv(gl.mVMLoc,false,modelViewM);
-    gl.uniformMatrix4fv(gl.pMLoc, false,projectionM);
+    //projectionM = mat4.perspective(45,canvas.width/canvas.height,0.1,100);
 
     //tebert.render(gl);
     pyramid.render(gl);

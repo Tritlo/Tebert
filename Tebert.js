@@ -3,11 +3,12 @@ function Tebert(descr){
     //var d = plyReader.getData(modelFile);
     this.__proto__.setup(modelFile);
     this.textureSrc = "fur.png";
+    descr.shininess = 2;
     this.setup(descr);
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
-    this.setColor(this.color || [1.0,1.0,1.0,1.0]);
+    this.setColor(descr.color || [0.5,0.5,0.5,1.0]);
     this.scale([0.3,0.3,0.3]);
     this.type = "Tebert";
 };

@@ -1,8 +1,8 @@
-var protoCube;
-function Cube(descr,data){
+function Cube(descr){
     //protoCube = protoCube || new Model("cube.ply");
     //var data = data || protoCube.getData();
     this.__proto__.setup("cube.ply");
+    descr.shininess = 1;
     this.setup(descr);
     this.type = "Cube";
 };
