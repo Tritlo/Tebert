@@ -2,6 +2,8 @@ function Pyramid(descr){
     for(var prop in descr){
 	this[prop] = descr[prop];
     }
+    this.total = 0;
+    this.visited = 0;
     this.init();
 };
 
@@ -46,7 +48,7 @@ Pyramid.prototype.isVisited = function(x,y) {
     var cube = this.getCube(x,y);
     if (cube) return cube.isVisited;
     return false;
-}
+};
 
 Pyramid.prototype.hasWon = function() {
     /*
@@ -60,17 +62,17 @@ Pyramid.prototype.hasWon = function() {
      */
     console.log(this.visited, this.total);
     return this.visited === this.total;
-}
+};
 
 Pyramid.prototype.getCube = function(x,y) {
     if (!this.cubes[x+this.height-1])
         return null;
     return this.cubes[x+this.height-1][y+this.height-1];
-}
+};
 
 Pyramid.prototype.isOutOfBounds = function(x,y) {
     return manhattanDist(Math.round(x), Math.round(y))  >= this.height;
-}
+};
 
 
 Pyramid.prototype.init = function() {
@@ -79,8 +81,6 @@ Pyramid.prototype.init = function() {
     this.height = this.height || 4;
     this.cubes = [];
     length = 2*this.height - 1;
-    this.total = 0;
-    this.visited = 0;
     for (var i = 0; i < length+1; i++) {
         this.cubes[i] = [];
         for (var j = 0; j < length+1; j++) {
@@ -95,10 +95,10 @@ Pyramid.prototype.init = function() {
         }
     }
     this.visit(0,0);
-}
+};
 
 
 Pyramid.prototype.manhattanDist = function(x,y) {
     return Math.abs(this.height-x-1) + Math.abs(this.height-y-1);
-}
+};
 

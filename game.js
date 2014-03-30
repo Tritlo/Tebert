@@ -168,6 +168,11 @@ function start(){
 
 function onVictory() {
     console.log('Victory!');
+    pyramid = new Pyramid({height: pyramid.height+1});
+}
+
+function onTebertDeath() {
+    pyramid = new Pyramid({height: pyramid.height});
 }
 
 

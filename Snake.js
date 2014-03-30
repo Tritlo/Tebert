@@ -15,9 +15,7 @@ function Snake(descr){
 
 Snake.prototype = new Enemy();
 
-
-
-Snake.prototype.waitTime = 200.0;
+Snake.prototype.waitTime = 100.0;
 Snake.prototype.countDown = Snake.prototype.waitTime*Math.random();
 
 

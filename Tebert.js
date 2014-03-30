@@ -23,6 +23,7 @@ Tebert.prototype.kill = function() {
     //console.log('DEAD');
     this.moveQueue = [];
     this.addMove([-this.loc[0], -this.loc[2]]);
+    onTebertDeath();
 };
 
 Tebert.prototype.onAnimEnd = function(currloc,prevloc){

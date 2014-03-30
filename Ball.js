@@ -17,7 +17,7 @@ function Ball(descr){
 Ball.prototype = new Enemy();
 
 
-Ball.prototype.waitTime = 100.0;
+Ball.prototype.waitTime = 50.0;
 Ball.prototype.countDown = Ball.prototype.waitTime*Math.random();
 
 Ball.prototype.isLegal = function(move){
