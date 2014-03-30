@@ -15,8 +15,8 @@ _entities   : [],
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
-spawnBallInterval : 600,
-spawnBallCountDown : 300,
+spawnBallInterval : 300,
+spawnBallCountDown : 100,
 
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.

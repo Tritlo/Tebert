@@ -22,7 +22,7 @@ Snake.prototype.kill = function() {
 };
 
 
-Snake.prototype.waitTime = 200.0;
+Snake.prototype.waitTime = 100.0;
 Snake.prototype.countDown = Snake.prototype.waitTime;
 
 

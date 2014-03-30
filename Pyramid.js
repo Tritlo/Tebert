@@ -2,9 +2,11 @@ function Pyramid(descr){
     for(var prop in descr){
 	this[prop] = descr[prop];
     }
-    this.init();
-    this.visited = 0;
     this.total = 0;
+    this.visited = 0;
+    this.init();
+    
+    
 };
 
 
