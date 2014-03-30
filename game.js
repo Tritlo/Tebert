@@ -5,8 +5,10 @@ var temptheta = [ 0, 0, 0 ];
 var spin = [0,0,0];
 
 //var eye = vec3.create([0.0,0.0,2.0]);
-var eye = vec3.create([0.0,4.0,0.0]);
-var at = vec3.create([0.0,0.0,0.0]);
+// var eye = vec3.create([0.0,4.0,0.0]);
+var height = 4;
+var eye = vec3.create([height,height,height]);
+var at = vec3.create([0.0,-(height/2),0.0]);
 var up = vec3.create([0.0,1.0,0.0]);
 
 var lightPosition = vec4.create([5.0, 5.0, 5.0, 1.0] );
@@ -107,7 +109,7 @@ window.onload = function init() {
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
     tebert = new Tebert({"loc":[0,1.5,0,1], "color": [0.5,0.5,0.5,1.0]});
-    pyramid = new Pyramid();
+    pyramid = new Pyramid({"height":height});
     pyramid.visit(0,0);
     entityManager.generateSam();
     start();
@@ -143,6 +145,11 @@ function update(dt) {
     entityManager.update(du);
     tebert.update(du);
 }
+
+function moveEye() {
+    if (tebert.loc[0] * eye[0] < 0) eye[0] *= -1;
+    if (tebert.loc[2] * eye[2] < 0) eye[2] *= -1;
+};
 
 
 var lastUpdate = 0;

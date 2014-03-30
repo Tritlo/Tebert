@@ -20,6 +20,7 @@ Tebert.prototype.kill = function() {
 Tebert.prototype.onAnimEnd = function(loc){
     pyramid.visit(loc[0],loc[2]);
     entityManager.checkCollisions();
+    moveEye();
 };
 
 Tebert.prototype.keys = function(keyPressed){

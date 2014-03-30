@@ -37,7 +37,7 @@ _entities   : [],
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
-spawnBallInterval : 600,
+spawnBallInterval : 300,
 spawnBallCountDown : 600,
 
 // Some things must be deferred until after initial construction
