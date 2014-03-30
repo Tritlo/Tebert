@@ -29,6 +29,7 @@ function manhattanDist(x,y) {
     return Math.abs(x) + Math.abs(y);
 }
 
+
 function modulus(x,y){
     return ((x%y) + y) % y;
 }

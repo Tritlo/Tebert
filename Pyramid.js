@@ -90,9 +90,9 @@ Pyramid.prototype.init = function() {
                 this.cubes[i][j] = this.protoCube.modelCopy();
                 //this.cubes[i][j] = new Cube();
                 this.cubes[i][j].scale([0.5,0.5,0.5]);
-		        this.cubes[i][j].markUnVisited();
+		this.cubes[i][j].markUnVisited();
                 this.cubes[i][j].translate([i-this.height+1, -this.manhattanDist(i,j), j-this.height+1]);
-		        this.total += 1;
+		this.total += 1;
             }
         }
     }

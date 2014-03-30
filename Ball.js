@@ -13,45 +13,14 @@ function Ball(descr){
     this.type = "Ball";
 };
 
-Ball.prototype = new Character();
-
-Ball.prototype.isDeadly = true;
-
-Ball.prototype.onAnimEnd = function(currloc,prevloc){
-    entityManager.checkCollisions();
-    entityManager.killOutOfBounds();
-};
-
-Ball.prototype.kill = function() {
-    this.isDead = true;
-};
+Ball.prototype = new Enemy();
 
 
 Ball.prototype.waitTime = 100.0;
-Ball.prototype.countDown = Ball.prototype.waitTime;
+Ball.prototype.countDown = Ball.prototype.waitTime*Math.random();
 
-
-Ball.prototype.update = function(du) {
-    Character.prototype.update.call(this,du);
-    this.countDown -= du;
-    var move = this.getRandMove();
-    if (this.countDown < 0) {
-        this.countDown = this.waitTime;
-	    var move = this.getRandMove();
-        // console.log(move);
-	    this.addMove(move);
-    }
-    if (this.isDead) return entityManager.KILL_ME_NOW;
+Ball.prototype.isLegal = function(move){
+    var dNow = manhattanDist(this.loc[0],this.loc[2]);
+    var dNext = manhattanDist(this.loc[0]+move[0],this.loc[2]+move[1]);
+    return (dNow < dNext);
 };
-
-Ball.prototype.getRandMove = function() {
-    var rand = randInt(0,4);
-    var move;
-    if (rand === 0) move = [1,0];
-    if (rand === 1) move = [0,1];
-    if (rand === 2) move = [-1,0];
-    if (rand === 3) move = [0,-1];
-    if (this.loc[0] * move[0] < 0)  move[0] *= -1; // can't go up
-    if (this.loc[2] * move[1] < 0)  move[1] *= -1;
-    return move;
-}
