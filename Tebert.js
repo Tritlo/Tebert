@@ -1,26 +1,34 @@
 function Tebert(descr){
-    var d  = plyReader.getData("monkey.ply");
-    d.textureSrc = "fur.png";
-    this.__proto__.setup(d);
+    var modelFile = (lowdef) ? "monkey.ply" : "head.ply";
+    //var d = plyReader.getData(modelFile);
+    this.__proto__.setup(modelFile);
+    this.textureSrc = "fur.png";
+    descr.shininess = 4;
     this.setup(descr);
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
-    this.setColor(this.color || [1.0,1.0,1.0,1.0]);
-    this.scale([0.3,0.3,0.3]);
+    this.setColor(descr.color || [0.2,0.2,0.2,1.0]);
+    this.scale([0.35,0.35,0.35]);
+    this.type = "Tebert";
 };
 
 Tebert.prototype = new Character();
+Tebert.prototype.onAnimStart = function(currloc,nextloc){
+    rotateTo(currloc,nextloc);
+};
 
 Tebert.prototype.kill = function() {
     console.log('DEAD');
+    this.moveQueue = [];
     this.addMove([-this.loc[0], -this.loc[2]]);
 };
 
-Tebert.prototype.onAnimEnd = function(loc){
-    pyramid.visit(loc[0],loc[2]);
+Tebert.prototype.onAnimEnd = function(currloc,prevloc){
+    pyramid.visit(currloc[0],currloc[2]);
     entityManager.checkCollisions();
     moveEye();
+    entityManager.killOutOfBounds();
 };
 
 Tebert.prototype.keys = function(keyPressed){

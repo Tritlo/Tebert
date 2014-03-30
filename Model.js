@@ -1,3 +1,5 @@
+//Model.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
+var cache = new Cache();
 function Model(descr){
     this.setup(descr);
     this.type = "Model";
@@ -5,7 +7,15 @@ function Model(descr){
 
 Model.prototype.setup = function(descr){
     if(typeof(descr) === "string"){
-	descr = plyReader.getData(descr);
+	var name = descr;
+	this.modelName = name;
+	if(cache.has(name)){
+	    descr = cache.get(name);
+	} else {
+	    descr = plyReader.getData(name);
+	    descr.modelName = name;
+	    cache.put(name,descr);
+	}
     }
     for(var prop in descr){
 	this[prop] =  descr[prop];
@@ -15,35 +25,88 @@ Model.prototype.setup = function(descr){
     this.translate(this.loc);
     this.init();
     this.glInitialized = false;
+    this.colorsNeedUpdate = true;
 };
 
 Model.prototype.glInit = function(gl){
-    this.texCoords = [[0,0],[0,1],[1,1],[1,0]] || this.texCoords;
-    this.texCoordsArray = [];
-    //A shoddy hack
-    var texs =    [ 0, 1, 2, 0, 2, 3 ];
-    //for(var i = 0; i < this.polys.length; ++i){
-    for(var i = 0; i < this.points.length; ++i){
-	//var p = this.polys[i];
-	//var indices = [p[0], p[1], p[2], p[0], p[2], p[3]];
-	//for ( var j = 0; j < indices.length; ++j ) {
-	    this.texCoordsArray.push(this.texCoords[texs[i%6]]);
+    if(!this.vBuffer){
+	if(cache.has(this.modelName,"vBuffer")){
+	    this.vBuffer = cache.get(this.modelName,"vBuffer");
+	} else {
+	    this.vBuffer =gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points),
+			   gl.STATIC_DRAW );
+	   cache.put(this.modelName,"vBuffer",this.vBuffer);
+	}
     }
+
+    if(!this.nBuffer){
+	if(cache.has(this.modelName,"nBuffer")){
+	    this.nBuffer = cache.get(this.modelName,"nBuffer");
+	} else {
+	    this.nBuffer =gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.normals),
+			   gl.STATIC_DRAW );
+	   cache.put(this.modelName,"nBuffer",this.nBuffer);
+	}
+    }
+
+    if(!this.cBuffer){
+	this.cBuffer = gl.createBuffer();
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
+	gl.bufferData( gl.ARRAY_BUFFER, this.flatColors, gl.STATIC_DRAW );
+    }
+    
+    if(!this.tBuffer){
+	if(cache.has(this.modelName,"tBuffer")){
+	    this.tBuffer = cache.get(this.modelName,"tBuffer");
+	} else {
+	    this.texCoords = [[0,0],[0,1],[1,1],[1,0]] || this.texCoords;
+	    this.texCoordsArray = [];
+	    //A shoddy hack
+	    var texs =    [ 0, 1, 2, 0, 2, 3 ];
+	    //for(var i = 0; i < this.polys.length; ++i){
+	    for(var i = 0; i < this.points.length; ++i){
+		//var p = this.polys[i];
+		//var indices = [p[0], p[1], p[2], p[0], p[2], p[3]];
+		//for ( var j = 0; j < indices.length; ++j ) {
+		    this.texCoordsArray.push(this.texCoords[texs[i%6]]);
+	    }
+	    this.tBuffer = gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.tBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray),
+			   gl.STATIC_DRAW );
+	   cache.put(this.modelName,"tBuffer",this.tBuffer);
+	}
+    }
+
+    this.colorsNeedUpdate = false;
+
     if(this.textureSrc){
 	this.initTexture(gl);
     }
+
     this.glInitialized = true;
 };
 
+
+
 Model.prototype.initTexture = function(gl){
-	this.texture = gl.createTexture();
-	this.image = new Image();
-        var cbe = this;
-	this.image.onload = function() {
-	    console.log("loaded");
-	    cbe.configureTexture(gl);
-	};
-	this.image.src = this.textureSrc;
+        if(!cache.has(this.textureSrc)){
+	    this.texture = gl.createTexture();
+	    cache.put(this.textureSrc,this.texture);
+	    this.image = new Image();
+	    var cbe = this;
+	    this.image.onload = function() {
+		console.log("loaded " + cbe.textureSrc);
+		cbe.configureTexture(gl);
+	    };
+	    this.image.src = this.textureSrc;
+	} else {
+	   this.texture = cache.get(this.textureSrc); 
+	}
 };
 
 Model.prototype.configureTexture = function(gl){
@@ -79,13 +142,19 @@ Model.prototype.translate = function(t){
 };
 
 Model.prototype.scale= function(s){
+    var loc = this.loc.slice(0);
+    this.translate(vec4.negate(loc,vec4.create()));
     var funcMatr = mat4.scale(mat4.identity(mat4.create()),s);
     this.updateObjM(funcMatr);
+    this.translate(loc);
 };
 
 Model.prototype.rotate= function(angle,axis){
+    var loc = this.loc.slice(0);
+    this.translate(vec4.negate(loc,vec4.create()));
     var funcMatr = mat4.rotate(mat4.identity(mat4.create()),angle,axis);
     this.updateObjM(funcMatr);
+    this.translate(loc);
     this.loc = mat4.multiplyVec4(funcMatr,this.loc);
 };
 
@@ -93,6 +162,7 @@ Model.prototype.rotate= function(angle,axis){
 //Points, normals and pols
 Model.prototype.modelCopy = function() {
     var m = this.getData();
+    /* TURN OFF IF CHANGIN THESE PARAMETERS IN NEW MODEL */
     return new Model(m);
 };
 
@@ -100,7 +170,13 @@ Model.prototype.getData = function(){
     var m =  {"points": this.points,
 	      "normals": this.normals,
 	      "polys": this.pols,
-	      "textureSrc": this.textureSrc};
+	      "textureSrc": this.textureSrc,
+	      "nBuffer" : this.nBuffer,
+	      "vBuffer" : this.vBuffer,
+	      "tBuffer" : this.tBuffer,
+	      "modelName" : this.modelName,
+	      "shininess" :this.shininess
+	     };
     /*
     //Uncomment this to create actual copies,
      // Not just pointers.
@@ -122,53 +198,56 @@ Model.prototype.swapColor = function(color){
 
 Model.prototype.setColor = function(color){
     this.color = color;
-    this.vertexColors = [];
-    this.colors = [];
-    for(var i in this.points){
-	this.vertexColors.push(color);
-        this.colors.push( color );
+    if(this.points){
+	this.flatColors = 
+	    this.flatColors || new Float32Array(4*this.points.length);
+	for(var i in this.points){
+	    for(var j = 0; j < color.length;j++){
+		this.flatColors[4*i+j] = color[j];
+	    }
+	}
     }
+    //We do not have access to gl here.
+    this.colorsNeedUpdate = true;
+};
+
+Model.prototype.updateColorBuffer = function(gl){
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, this.flatColors, gl.STATIC_DRAW );
+
+    this.colorsNeedUpdate = false;
+
 };
 
 Model.prototype.render = function(gl,transformMatrix){
-    if(!this.glInitialized){
-	this.glInit(gl);
-    }
-    if(!this.texture){
-	this.texture = createSolidTexture([1.0,1.0,1.0,1.0],gl);
-    }
-    if(!transformMatrix){
-	var transformMatrix = mat4.identity(mat4.create());
-    };
+    //Most of these happen only once
+    if(!this.glInitialized){this.glInit(gl);}
+    if(!this.texture){this.texture = createSolidTexture([1.0,1.0,1.0,1.0],gl);}
+    if(this.colorsNeedUpdate){this.updateColorBuffer(gl);}
 
-    gl.uniformMatrix4fv(
-	gl.objMLoc,
-	false,
+    if(!transformMatrix){var transformMatrix = mat4.identity(mat4.create());};
+
+    gl.uniformMatrix4fv(gl.objMLoc, false,
 	mat4.multiply(transformMatrix,this.objMatr,mat4.create())
     );
+
     if(gl.vColor && gl.vColor > 0){
-	gl.bindBuffer( gl.ARRAY_BUFFER, gl.cBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.colors)),
-		       gl.STATIC_DRAW );
+	gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
 	gl.vertexAttribPointer( gl.vColor, 4, gl.FLOAT, false, 0, 0 );
     }
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, gl.vBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.points)),
-		   gl.STATIC_DRAW );
+    gl.uniform1f( gl.shininess,this.shininess || materialShininess );
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
     gl.vertexAttribPointer( gl.vPosition, 4, gl.FLOAT, false, 0, 0 );
 
-    
-    gl.bindBuffer( gl.ARRAY_BUFFER, gl.nBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(flatten(this.normals)),
-		   gl.STATIC_DRAW );
+   
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.nBuffer );
     gl.vertexAttribPointer( gl.vNormal, 4, gl.FLOAT, false, 0, 0 );
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture( gl.TEXTURE_2D, this.texture );
-    gl.bindBuffer( gl.ARRAY_BUFFER, gl.tBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.texCoordsArray), gl.STATIC_DRAW );
 
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.tBuffer );
     gl.vertexAttribPointer( gl.vTex, 2, gl.FLOAT, false, 0, 0 );
 
 

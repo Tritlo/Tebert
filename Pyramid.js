@@ -96,7 +96,7 @@ Pyramid.prototype.init = function() {
             }
         }
     }
-    this.visit(1,1);
+    this.visit(0,0);
 
 }
 
