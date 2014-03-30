@@ -1,12 +1,11 @@
 function Character(descr){
     this.setup(descr);
-
-    this.moveQueue = [];
 };
 
 Character.prototype = new Model();
 
 Character.prototype.isDead = false;
+Character.prototype.availableMoves = [[1,0],[0,1],[-1,0],[0,-1]];
 
 Character.prototype.move = function(newPos){
     var currLoc = this.loc;
@@ -18,15 +17,21 @@ Character.prototype.move = function(newPos){
     var diff = newH - currH + this.origHeight;
     trans[1] = diff;
     trans[3] = 0;
-    if(this.isLegal(trans)){
-	this.startAnim(trans);
-    }
+    this.startAnim(trans);
 };
 
-Character.prototype.isLegal = function(trans){
-    return true;
-    trans = vec4.add(trans,this.loc,vec4.create());
-    return (Math.abs(trans[0]) +Math.abs(trans[2]) < pyramid.height);
+Character.prototype.isLegal = function(move){
+  var dNext = manhattanDist(this.loc[0]+move[0] ,this.loc[2]+move[1]);
+  return dNext < pyramid.height -1;
+};
+
+Character.prototype.getLegalMoves = function(){
+   var legalMoves = [];
+   for(var m in this.availableMoves){
+       if(this.isLegal(this.availableMoves[m]))
+	   legalMoves.push(this.availableMoves[m].slice(0));
+       }
+   return legalMoves;
 };
 
 Character.prototype.onAnimEnd = function(currloc,nextloc){

@@ -6,6 +6,7 @@ var spin = [0,0,0];
 
 var lowdef = false;
 //var eye = vec3.create([0.0,0.0,2.0]);
+
 var eye = vec3.create([6.0,6.0,6.0]);
 var at = vec3.create([0.0,-2.0,0.0]);
 var up = vec3.create([0.0,1.0,0.0]);
@@ -103,11 +104,13 @@ window.onload = function init() {
     //cube2 = new Cube();
     //plyReader.read("teapot-n.ply",onModelReady);
     //tebert = new Tebert({"loc":[0,1,0,1]});
+
     //tebert = new Tebert({"loc":[0,0.5,0,1], "color": [0.5,0.5,0.5,1.0]});
     pyramid = new Pyramid();
     entityManager.init();
     //ball = new Ball({"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,1.0]});
-    //entityManager.generateSam();
+    entityManager.generateSam();
+    entityManager.generateSnake();
     start();
 };
 
@@ -163,6 +166,15 @@ function start(){
     window.requestAnimFrame(main);
 };
 
+function onVictory() {
+    console.log('Victory!');
+    pyramid = new Pyramid({height: pyramid.height+1});
+}
+
+function onTebertDeath() {
+    pyramid = new Pyramid({height: pyramid.height});
+}
+
 
 var NOMINAL_UPDATE_INTERVAL = 16.666;
 function update(dt) {
@@ -188,6 +200,11 @@ function update(dt) {
        targetRot = theta[0];
    }
 }
+
+function moveEye() {
+    if (tebert.loc[0] * eye[0] < 0) eye[0] *= -1;
+    if (tebert.loc[2] * eye[2] < 0) eye[2] *= -1;
+};
 
 
 var lastUpdate = 0;

@@ -42,23 +42,24 @@ var PlyReader =(function(){
 	//Pos: returns an object with the elements of the plyfile
 	parse: function(data,callback){
 	    var hasNormal = false;
+	    var retval,nl,line;
 	    // Read header
 	    while(data.length)
 	    {
 	      // var retval = data.match(/.*/);
 	      //var str = retval[0];
 	      nl = data.indexOf("\n")+1;
-              line = data.substr(0,nl-1);
+              line = data.substr(0,nl-1).trim();
 	      data = data.substr(nl);
 		
 	      retval = line.match(/element (\w+) (\d+)/);
 	      if(retval)
 	      {
-		if(retval[1] == "vertex") var npoints = parseInt(retval[2]);
-		if(retval[1] == "face") var npolys = parseInt(retval[2]);
+		if(retval[1] === "vertex") var npoints = parseInt(retval[2]);
+		if(retval[1] === "face") var npolys = parseInt(retval[2]);
 	      }
-	      if(line == "property float nx") hasNormal = true;
-	      if(line == "end_header") break;
+	      if(line === "property float nx") hasNormal = true;
+	      if(line === "end_header") break;
 	    }
 
 	    // Read points
@@ -67,7 +68,6 @@ var PlyReader =(function(){
 	    var vertices = [];
 	    var vertexNormals = [];
 	    var vNorms = [];
-	    var retval,nl,line;
 	    for (var i = 0; i < npoints; i++) 
 	    {
 		nl = data.indexOf("\n")+1;

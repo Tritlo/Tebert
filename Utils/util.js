@@ -29,6 +29,22 @@ function manhattanDist(x,y) {
     return Math.abs(x) + Math.abs(y);
 }
 
+function colorToName(x){
+    var st = "";
+    for(var i = 0; i < 3; i++){
+	st += Math.round(x[i]*255).toString(16);
+    };
+    return "#"+st;
+};
+
+function roundArr(x){
+    for(var i = 0; i < x.length; i++){
+	x[i] = Math.round(x[i]);
+    }
+    return x;
+}
+
+
 function modulus(x,y){
     return ((x%y) + y) % y;
 }
