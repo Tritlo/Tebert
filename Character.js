@@ -110,7 +110,8 @@ Character.prototype.endAnim = function(){
     this.animating = false;
     this.onAnimEnd(vec4.round(this.loc),vec4.round(
 	vec4.subtract(this.loc,this.currentTrans,vec4.create())));
-    this.loc = this.loc.map(Math.round);
+    //Models get placed in wrong spots!
+    //this.loc = this.loc.map(Math.round);
     this.currentTrans = [0,0,0,0];
     this.transPart = [0,0,0,0];
 };
