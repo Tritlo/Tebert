@@ -63,7 +63,6 @@ Pyramid.prototype.hasWon = function() {
         }
     }
      */
-    console.log(this.visited, this.total);
     return this.visited === this.total;
 }
 
