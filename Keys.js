@@ -17,16 +17,20 @@ function handleKeyDown(evt){
 	    tebert.keys("l");
 	},
 	87: function () { //w
-	    eye[2] += 0.1;
+	    tebert.keys("i");
+	    //eye[2] += 0.1;
 	},
 	83: function () { //s
-	    eye[2] -= 0.1;
+	    tebert.keys("k");
+	    //eye[2] -= 0.1;
 	},
 	65: function () { //a
-	    eye[0] += 0.1;
+	    tebert.keys("j");
+	    //eye[0] += 0.1;
 	},
 	68: function () { //d
-	    eye[0] -= 0.1;
+	    tebert.keys("l");
+	    //eye[0] -= 0.1;
 	},
 	38: function () {//<-
 	    eye[1] += 0.1;

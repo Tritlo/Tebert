@@ -1,3 +1,4 @@
+//game.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
 var canvas;
 var gl;
 var theta = [ 0, 0, 0 ];

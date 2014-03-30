@@ -1,3 +1,4 @@
+//Enemy.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
 function Enemy(descr){
     this.setup(descr);
 };
