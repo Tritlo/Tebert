@@ -3,14 +3,15 @@ function Snake(descr){
     //this.__proto__.setup("monkey.ply");
     this.setColor([1.0,0.0,1.0,1.0]);
     this.setup(descr);
-    //this.rotate(Math.PI,[0,1,0]);
     this.rotate(-Math.PI/2,[1,0,0]);
+    this.rotate(-Math.PI/2,[0,1,0]);
     this.translate([0,1.2,0]);
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
     this.scale([0.2,0.2,0.2]);
     this.type = "Snake";
     this.moveQueue = [];
+    this.rot = 0;
 };
 
 Snake.prototype = new Enemy();

@@ -12,6 +12,7 @@ function Tebert(descr){
     this.scale([0.35,0.35,0.35]);
     this.type = "Tebert";
     this.moveQueue = [];
+    this.rot = 0;
 };
 
 Tebert.prototype = new Character();
@@ -49,7 +50,8 @@ Tebert.prototype.keys = function(keyPressed){
 	     return [1,0];
 	}
     };
+    
 
-    var newLoc = keys[keyPressed]();
-    this.addMove(newLoc);
+    var move = keys[keyPressed]();
+    this.addMove(move);
 };

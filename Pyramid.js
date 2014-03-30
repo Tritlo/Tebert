@@ -72,6 +72,21 @@ Pyramid.prototype.getCube = function(x,y) {
 Pyramid.prototype.isOutOfBounds = function(x,y) {
     return manhattanDist(Math.round(x), Math.round(y))  >= this.height;
 };
+Pyramid.prototype.reset = function(){
+    this.total = 0;
+    this.visited = 0;
+    var length = 2*this.height - 1;
+    for (var i = 0; i < length+1; i++) {
+        for (var j = 0; j < length+1; j++) {
+            if (this.manhattanDist(i,j) < this.height) {
+		this.total += 1;
+		this.cubes[i][j].markUnVisited();
+	    }
+	}
+    }
+    this.visit(0,0);
+};
+
 
 
 Pyramid.prototype.init = function() {
@@ -79,21 +94,18 @@ Pyramid.prototype.init = function() {
     //this.protoCube =  new Cube();
     this.height = this.height || 4;
     this.cubes = [];
-    length = 2*this.height - 1;
+    var length = 2*this.height - 1;
     for (var i = 0; i < length+1; i++) {
         this.cubes[i] = [];
         for (var j = 0; j < length+1; j++) {
             if (this.manhattanDist(i,j) < this.height) {
                 this.cubes[i][j] = this.protoCube.modelCopy();
-                //this.cubes[i][j] = new Cube();
                 this.cubes[i][j].scale([0.5,0.5,0.5]);
-		this.cubes[i][j].markUnVisited();
                 this.cubes[i][j].translate([i-this.height+1, -this.manhattanDist(i,j), j-this.height+1]);
-		this.total += 1;
             }
         }
     }
-    this.visit(0,0);
+    this.reset();
 };
 
 

@@ -54,7 +54,9 @@ checkCollisions : function() {
     var tebert = this.getTebert();
     for (var i = 0; i < this._entities.length; i++) {
         var entity = this._entities[i];
-        if (entity.isDeadly && entity.loc[0] === tebert.loc[0] && entity.loc[2] === tebert.loc[2])
+        if (entity.isDeadly
+	    && Math.round(entity.loc[0]) === Math.round(tebert.loc[0]) 
+	    && Math.round(entity.loc[2]) === Math.round(tebert.loc[2]))
             tebert.kill();
     }
 },

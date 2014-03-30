@@ -5,6 +5,7 @@ var temptheta = [ 0, 0, 0 ];
 var spin = [0,0,0];
 
 var lowdef = false;
+//var lowdef = true;
 //var eye = vec3.create([0.0,0.0,2.0]);
 
 var eye = vec3.create([6.0,6.0,6.0]);
@@ -138,7 +139,7 @@ function rotateTo(from,to){
     startRotate(newRot);
 };
 
-var rotToAdd = 0;;
+var rotToAdd = 0;
 var targetRot = 0;
 function startRotate(newRot){
     targetRot = newRot;
@@ -168,11 +169,13 @@ function start(){
 
 function onVictory() {
     console.log('Victory!');
+    //Horribly inefficient!
     pyramid = new Pyramid({height: pyramid.height+1});
 }
 
 function onTebertDeath() {
-    pyramid = new Pyramid({height: pyramid.height});
+    pyramid.reset();
+    //pyramid = new Pyramid({height: pyramid.height});
 }
 
 
