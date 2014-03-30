@@ -1,3 +1,4 @@
+//Sam.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
 function Sam(descr){
     this.__proto__.setup("monkey.ply");
     this.setup(descr);

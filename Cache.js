@@ -1,3 +1,4 @@
+//Cache.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
 function Cache(descr){
     for(var prop in descr){
 	this[prop] =  descr[prop];

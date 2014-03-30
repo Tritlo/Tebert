@@ -1,4 +1,4 @@
-
+//PlyReader.js (C) 2014 Matthias Pall Gissurarson
 function point3D(x, y, z)
 {
     this.x = x;

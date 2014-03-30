@@ -1,3 +1,4 @@
+//Tebert.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
 function Tebert(descr){
     var modelFile = (lowdef) ? "monkey.ply" : "head.ply";
     //var d = plyReader.getData(modelFile);

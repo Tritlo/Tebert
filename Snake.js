@@ -1,3 +1,4 @@
+//Snake.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
 function Snake(descr){
     this.__proto__.setup("egret.ply");
     //this.__proto__.setup("monkey.ply");
