@@ -25,9 +25,9 @@ Pyramid.prototype.render = function(gl,transformMatrix){
 
 Pyramid.prototype.visit = function(x,y) {
     var cube = this.getCube(x,y);
-    if (cube){
+    if (cube && !cube.isVisited){
         cube.markVisited();
-	this.visited += 1;
+	    this.visited += 1;
     }
 };
 
@@ -35,7 +35,7 @@ Pyramid.prototype.unVisit = function(x,y) {
     var cube = this.getCube(x,y);
     if (cube && cube.isVisited){
         cube.markUnVisited();
-	this.visited -= 1;
+	    this.visited -= 1;
     }
 };
 
@@ -61,7 +61,7 @@ Pyramid.prototype.hasWon = function() {
         }
     }
      */
-    
+    console.log(this.visited, this.total);
     return this.visited === this.total;
 }
 
@@ -90,9 +90,9 @@ Pyramid.prototype.init = function() {
                 this.cubes[i][j] = this.protoCube.modelCopy();
                 //this.cubes[i][j] = new Cube();
                 this.cubes[i][j].scale([0.5,0.5,0.5]);
-		this.cubes[i][j].markUnVisited();
+		        this.cubes[i][j].markUnVisited();
                 this.cubes[i][j].translate([i-this.height+1, -this.manhattanDist(i,j), j-this.height+1]);
-		this.total += 1;
+		        this.total += 1;
             }
         }
     }

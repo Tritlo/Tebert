@@ -38,6 +38,7 @@ Ball.prototype.update = function(du) {
     if (this.countDown < 0) {
         this.countDown = this.waitTime;
 	    var move = this.getRandMove();
+        // console.log(move);
 	    this.addMove(move);
     }
     if (this.isDead) return entityManager.KILL_ME_NOW;

@@ -15,8 +15,8 @@ _entities   : [],
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
-spawnBallInterval : 300,
-spawnBallCountDown : 600,
+spawnBallInterval : 600,
+spawnBallCountDown : 300,
 
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
@@ -38,7 +38,11 @@ generateBall : function(descr) {
 },
 
 generateSam : function(descr) {
-    this._entities.push(new Sam({"loc":[0,0.5,0,1], "color": [1.0,0.0,1.0,0.0]}));
+    this._entities.push(new Sam({"loc":[0,0.5,0,1], "color": [0.0,1.0,0.0,0.0]}));
+},
+
+generateSnake : function(descr) {
+    this._entities.push(new Snake({"loc":[0,0.5,0,1]}));
 },
 
 generateTebert : function(descr) {

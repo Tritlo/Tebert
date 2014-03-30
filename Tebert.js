@@ -26,8 +26,9 @@ Tebert.prototype.kill = function() {
 
 Tebert.prototype.onAnimEnd = function(currloc,prevloc){
     pyramid.visit(currloc[0],currloc[2]);
+    if (pyramid.hasWon()) onVictory();
     entityManager.checkCollisions();
-    moveEye();
+    // moveEye();
     entityManager.killOutOfBounds();
 };
 

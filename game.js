@@ -109,7 +109,8 @@ window.onload = function init() {
     pyramid = new Pyramid();
     entityManager.init();
     //ball = new Ball({"loc":[0,0.5,0,1], "color": [1.0,0.0,0.0,1.0]});
-    //entityManager.generateSam();
+    entityManager.generateSam();
+    entityManager.generateSnake();
     start();
 };
 
@@ -164,6 +165,10 @@ function start(){
     //cube2.translate([1,0,0]);
     window.requestAnimFrame(main);
 };
+
+function onVictory() {
+    console.log('Victory!');
+}
 
 
 var NOMINAL_UPDATE_INTERVAL = 16.666;

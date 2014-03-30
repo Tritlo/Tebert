@@ -4,7 +4,7 @@ function Sam(descr){
     this.rotate(Math.PI,[0,1,0]);
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
-    this.setColor(this.color || [1.0,0.0,1.0,1.0]);
+    this.setColor(this.color || [0.0,1.0,0.0,1.0]);
     this.scale([0.3,0.3,0.3]);
 };
 
