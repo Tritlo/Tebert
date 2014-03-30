@@ -37,6 +37,14 @@ function colorToName(x){
     return "#"+st;
 };
 
+function roundArr(x){
+    for(var i = 0; i < x.length; i++){
+	x[i] = Math.round(x[i]);
+    }
+    return x;
+}
+
+
 function modulus(x,y){
     return ((x%y) + y) % y;
 }

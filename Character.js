@@ -21,8 +21,7 @@ Character.prototype.move = function(newPos){
 };
 
 Character.prototype.isLegal = function(move){
-   var dNext = manhattanDist(this.loc[0]+move[0] ,this.loc[2]+move[1]);
-  console.log("next m dist",dNext,pyramid.height,this);
+  var dNext = manhattanDist(this.loc[0]+move[0] ,this.loc[2]+move[1]);
   return dNext < pyramid.height -1;
 };
 
