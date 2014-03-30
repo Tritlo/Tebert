@@ -32,6 +32,7 @@ Cache.prototype.put = function(key,subkeyorvalue,value){
    }
 };
 Cache.prototype.getColor = function(model,color){
+   if(!this.enabled) return;
     return this._cache[model][color];
 };
 
@@ -54,6 +55,7 @@ Cache.prototype.update = function(key,descr){
 };
 
 Cache.prototype.putColor = function(model,color,buffer){
+   if(!this.enabled) return;
     console.log("Added " + model + "." + color + " to cache.");
     this._cache[model][color] = buffer;
 };

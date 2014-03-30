@@ -7,18 +7,41 @@ Character.prototype = new Model();
 Character.prototype.isDead = false;
 Character.prototype.availableMoves = [[1,0],[0,1],[-1,0],[0,-1]];
 
-Character.prototype.move = function(newPos){
+
+Character.prototype.move = function(move,noAnimation){
     var currLoc = this.loc;
-    var trans = [newPos[0],0,newPos[1],0];
+    var trans = [move[0],0,move[1],0];
     var currH = this.loc[1];
     var newH =
-	    - Math.abs(newPos[0]+this.loc[0])
-	    - Math.abs(newPos[1]+this.loc[2]);
+	    - Math.abs(move[0]+this.loc[0])
+	    - Math.abs(move[1]+this.loc[2]);
     var diff = newH - currH + this.origHeight;
+    
     trans[1] = diff;
     trans[3] = 0;
-    this.startAnim(trans);
+    if(!noAnimation){
+	this.setRot(this.getRot(move));
+	this.startAnim(trans);
+    } else {
+	this.translate(trans);
+    }
 };
+
+Character.prototype.setRot = function(newRot){
+    var diff = newRot - this.rot;
+    this.rotate(diff,[0,1,0]);
+    this.rot = newRot;
+};
+
+Character.prototype.getRot = function(move){
+    if(move[0] === 1 )
+	return -Math.PI/2;
+    if(move[0] === -1 )
+	return Math.PI/2;
+    if(move[1] === 1 )
+	return Math.PI;
+    return 0;
+}
 
 Character.prototype.isLegal = function(move){
   var dNext = manhattanDist(this.loc[0]+move[0] ,this.loc[2]+move[1]);
@@ -27,10 +50,9 @@ Character.prototype.isLegal = function(move){
 
 Character.prototype.getLegalMoves = function(){
    var legalMoves = [];
-   for(var m in this.availableMoves){
+   for(var m in this.availableMoves)
        if(this.isLegal(this.availableMoves[m]))
 	   legalMoves.push(this.availableMoves[m].slice(0));
-       }
    return legalMoves;
 };
 
@@ -49,6 +71,7 @@ Character.prototype.update = function(du){
 	}
     }
 };
+
 
 Character.prototype.addMove = function(trans){
     this.moveQueue.push(trans);
@@ -87,6 +110,8 @@ Character.prototype.endAnim = function(){
     this.animating = false;
     this.onAnimEnd(vec4.round(this.loc),vec4.round(
 	vec4.subtract(this.loc,this.currentTrans,vec4.create())));
+    //Models get placed in wrong spots!
+    //this.loc = this.loc.map(Math.round);
     this.currentTrans = [0,0,0,0];
     this.transPart = [0,0,0,0];
 };

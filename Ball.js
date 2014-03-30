@@ -12,6 +12,7 @@ function Ball(descr){
     this.scale([0.48,0.48,0.48]);
     this.type = "Ball";
     this.moveQueue = [];
+    this.rot = 0;
 };
 
 Ball.prototype = new Enemy();

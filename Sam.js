@@ -8,6 +8,7 @@ function Sam(descr){
     this.scale([0.3,0.3,0.3]);
     this.type = "Sam";
     this.moveQueue = [];
+    this.rot = 0;
 };
 
 Sam.prototype = new Enemy();

@@ -15,7 +15,7 @@ _entities   : [],
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
-spawnBallInterval : 300,
+spawnBallInterval : 200,
 spawnBallCountDown : 100,
 
 // Some things must be deferred until after initial construction
@@ -24,21 +24,30 @@ spawnBallCountDown : 100,
 
 init: function() {
     this.generateTebert({"loc":[0,0.5,0,1]});
+    this.disableEnemies = false;
 },
 
 
 generateBall : function(descr) {
+    if(this.disableEnemies) return;
     var bd = {"loc":[0,0.5,0,1]};
     var b = new Ball(bd);
     this._entities.push(b);
 },
 
 generateSam : function(descr) {
-    this._entities.push(new Sam({"loc":[0,0.5,0,1], "color": [0.0,1.0,0.0,0.0]}));
+    if(this.disableEnemies) return;
+    var s = new Sam({"loc":[0,0.5,0,1], "color": [0.0,1.0,0.0,0.0]});
+    s.move([-1,1],true);
+    this._entities.push(s);
 },
 
 generateSnake : function(descr) {
-    this._entities.push(new Snake({"loc":[0,0.0,0,1]}));
+    if(this.disableEnemies) return;
+    var s = new Snake({"loc":[0,0.0,0,1]});
+    s.move([2,1],true);
+    this._entities.push(s);
+    
 },
 
 generateTebert : function(descr) {
@@ -54,7 +63,9 @@ checkCollisions : function() {
     var tebert = this.getTebert();
     for (var i = 0; i < this._entities.length; i++) {
         var entity = this._entities[i];
-        if (entity.isDeadly && entity.loc[0] === tebert.loc[0] && entity.loc[2] === tebert.loc[2])
+        if (entity.isDeadly
+	    && Math.round(entity.loc[0]) === Math.round(tebert.loc[0]) 
+	    && Math.round(entity.loc[2]) === Math.round(tebert.loc[2]))
             tebert.kill();
     }
 },

@@ -12,6 +12,7 @@ function Tebert(descr){
     this.scale([0.35,0.35,0.35]);
     this.type = "Tebert";
     this.moveQueue = [];
+    this.rot = 0;
 };
 
 Tebert.prototype = new Character();
@@ -35,21 +36,52 @@ Tebert.prototype.onAnimEnd = function(currloc,prevloc){
 };
 
 Tebert.prototype.keys = function(keyPressed){
+    var tb = this;
     var keys = {
 	"i": function(){
-	     return [0,-1];
+	    if(tb.rot === 0)
+		return [0,-1];
+	    if(tb.rot === -Math.PI/2)
+		return [1,0];
+	    if(tb.rot === Math.PI/2)
+		return [-1,0];
+	    if(tb.rot === Math.PI)
+		return [0,1];
 	},
 	"j": function(){
-	     return [-1,0];
+	    if(tb.rot === 0)
+		return [-1,0];
+	    if(tb.rot === -Math.PI/2)
+		return [0,-1];
+	    if(tb.rot === Math.PI/2)
+		return [0,1];
+	    if(tb.rot === Math.PI)
+		return [1,0];
 	},
 	"k": function(){
-	     return [0,1];
+	    if(tb.rot === 0)
+		return [0,1];
+	    if(tb.rot === -Math.PI/2)
+		return [-1,0];
+	    if(tb.rot === Math.PI/2)
+		return [1,0];
+	    if(tb.rot === Math.PI)
+		return [0,-1];
 	},
 	"l": function(){
-	     return [1,0];
+	    if(tb.rot === 0)
+		return [1,0];
+	    if(tb.rot === -Math.PI/2)
+		return [0,1];
+	    if(tb.rot === Math.PI/2)
+		return [0,-1];
+	    if(tb.rot === Math.PI)
+		return [-1,0];
+
 	}
     };
+    
 
-    var newLoc = keys[keyPressed]();
-    this.addMove(newLoc);
+    var move = keys[keyPressed]();
+    this.addMove(move);
 };

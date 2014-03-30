@@ -1,5 +1,7 @@
 //Model.js (C) 2014 Matthias Pall Gissurarson, Vilhjalmur Vilhjalmsson
-var cache = new Cache();
+//var cacheEnabled = false;
+var cacheEnabled = true;
+var cache = new Cache({"enabled":cacheEnabled});
 function Model(descr){
     this.setup(descr);
     this.type = "Model";
@@ -160,7 +162,7 @@ Model.prototype.rotate= function(angle,axis){
     var funcMatr = mat4.rotate(mat4.identity(mat4.create()),angle,axis);
     this.updateObjM(funcMatr);
     this.translate(loc);
-    this.loc = mat4.multiplyVec4(funcMatr,this.loc);
+    //this.loc = mat4.multiplyVec4(funcMatr,this.loc);
 };
 
 //Returns a copy of this model, while referring to the same
