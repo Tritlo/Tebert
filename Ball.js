@@ -11,6 +11,7 @@ function Ball(descr){
     //this.scale([0.8,0.8,0.8]);
     this.scale([0.48,0.48,0.48]);
     this.type = "Ball";
+    this.moveQueue = [];
 };
 
 Ball.prototype = new Enemy();

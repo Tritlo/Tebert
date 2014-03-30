@@ -1,7 +1,5 @@
 function Character(descr){
     this.setup(descr);
-
-    this.moveQueue = [];
 };
 
 Character.prototype = new Model();

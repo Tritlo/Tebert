@@ -9,6 +9,8 @@ function Snake(descr){
     this.origHeight = this.loc[1];
     this.currentTrans = [0,0,0,0];
     this.scale([0.2,0.2,0.2]);
+    this.type = "Snake";
+    this.moveQueue = [];
 };
 
 Snake.prototype = new Enemy();
@@ -33,4 +35,4 @@ Snake.prototype.getMove = function() {
         else        move = [ 0,-1];
     }
     return move;
-}
+};

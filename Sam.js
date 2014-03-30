@@ -6,6 +6,8 @@ function Sam(descr){
     this.currentTrans = [0,0,0,0];
     this.setColor(this.color || [0.0,1.0,0.0,1.0]);
     this.scale([0.3,0.3,0.3]);
+    this.type = "Sam";
+    this.moveQueue = [];
 };
 
 Sam.prototype = new Enemy();

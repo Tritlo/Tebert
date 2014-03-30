@@ -3,8 +3,6 @@ function Pyramid(descr){
 	this[prop] = descr[prop];
     }
     this.init();
-    this.visited = 0;
-    this.total = 0;
 };
 
 
@@ -27,7 +25,7 @@ Pyramid.prototype.visit = function(x,y) {
     var cube = this.getCube(x,y);
     if (cube && !cube.isVisited){
         cube.markVisited();
-	    this.visited += 1;
+	this.visited += 1;
     }
 };
 
@@ -46,8 +44,7 @@ Pyramid.prototype.markVisit = function(x,y){
 
 Pyramid.prototype.isVisited = function(x,y) {
     var cube = this.getCube(x,y);
-    if (cube)
-        return cube.isVisited;
+    if (cube) return cube.isVisited;
     return false;
 }
 
@@ -82,7 +79,8 @@ Pyramid.prototype.init = function() {
     this.height = this.height || 4;
     this.cubes = [];
     length = 2*this.height - 1;
-
+    this.total = 0;
+    this.visited = 0;
     for (var i = 0; i < length+1; i++) {
         this.cubes[i] = [];
         for (var j = 0; j < length+1; j++) {
@@ -97,7 +95,6 @@ Pyramid.prototype.init = function() {
         }
     }
     this.visit(0,0);
-
 }
 
 
