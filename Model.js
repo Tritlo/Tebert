@@ -54,9 +54,14 @@ Model.prototype.glInit = function(gl){
     }
 
     if(!this.cBuffer){
-	this.cBuffer = gl.createBuffer();
-	gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
-	gl.bufferData( gl.ARRAY_BUFFER, this.flatColors, gl.STATIC_DRAW );
+	if(cache.hasColor(this.modelName,colorToName(this.color))){
+	    this.cBuffer = cache.getColor(this.modelName,colorToName(this.color));
+	} else {
+	    this.cBuffer = gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER, this.flatColors, gl.STATIC_DRAW );
+	   cache.putColor(this.modelName,colorToName(this.color),this.cBuffer);
+	}
     }
     
     if(!this.tBuffer){
@@ -198,6 +203,11 @@ Model.prototype.swapColor = function(color){
 
 Model.prototype.setColor = function(color){
     this.color = color;
+    if(cache.hasColor(this.modelName,colorToName(this.color))){
+	this.cBuffer = cache.getColor(this.modelName,colorToName(this.color));
+	this.colorsNeedUpdate = false;
+	return;
+    } 
     if(this.points){
 	this.flatColors = 
 	    this.flatColors || new Float32Array(4*this.points.length);
@@ -212,9 +222,14 @@ Model.prototype.setColor = function(color){
 };
 
 Model.prototype.updateColorBuffer = function(gl){
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, this.flatColors, gl.STATIC_DRAW );
-
+    if(cache.hasColor(this.modelName,colorToName(this.color))){
+	this.cBuffer = cache.getColor(this.modelName,colorToName(this.color));
+    } else {
+	    this.cBuffer = gl.createBuffer();
+	    gl.bindBuffer( gl.ARRAY_BUFFER, this.cBuffer );
+	    gl.bufferData( gl.ARRAY_BUFFER, this.flatColors, gl.STATIC_DRAW );
+	    cache.putColor(this.modelName,colorToName(this.color),this.nBuffer);
+	}
     this.colorsNeedUpdate = false;
 
 };

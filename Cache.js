@@ -31,6 +31,10 @@ Cache.prototype.put = function(key,subkeyorvalue,value){
        console.log("Added " + key + "." + subkeyorvalue + " to cache.");
    }
 };
+Cache.prototype.getColor = function(model,color){
+    return this._cache[model][color];
+};
+
 
 Cache.prototype.has = function(key,subkey){
     if(!this.enabled) return false;
@@ -47,4 +51,16 @@ Cache.prototype.update = function(key,descr){
     for(var prop in descr){
 	this._cache[key][prop] =  descr[prop];
     }
+};
+
+Cache.prototype.putColor = function(model,color,buffer){
+    console.log("Added " + model + "." + color + " to cache.");
+    this._cache[model][color] = buffer;
+};
+
+Cache.prototype.hasColor = function(model,color){
+    if(!this.enabled) return false;
+     if(this._cache[model] === undefined)
+	 return false;
+    return this._cache[model][color] !== undefined;
 };
