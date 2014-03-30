@@ -11,6 +11,7 @@ function Tebert(descr){
     this.setColor(descr.color || [0.2,0.2,0.2,1.0]);
     this.scale([0.35,0.35,0.35]);
     this.type = "Tebert";
+    this.moveQueue = [];
 };
 
 Tebert.prototype = new Character();
@@ -19,7 +20,7 @@ Tebert.prototype.onAnimStart = function(currloc,nextloc){
 };
 
 Tebert.prototype.kill = function() {
-    console.log('DEAD');
+    //console.log('DEAD');
     this.moveQueue = [];
     this.addMove([-this.loc[0], -this.loc[2]]);
     onTebertDeath();

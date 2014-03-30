@@ -24,15 +24,11 @@ spawnBallCountDown : 100,
 
 init: function() {
     this.generateTebert({"loc":[0,0.5,0,1]});
-    var protoBall = new Ball({"loc":[0,0.5,0,1]} );
-    this.protoBallData = protoBall.modelCopy();
 },
 
 
 generateBall : function(descr) {
     var bd = {"loc":[0,0.5,0,1]};
-    //for(var k in this.protoBallData)
-	//bd[k] = this.protoBallData[k];
     var b = new Ball(bd);
     this._entities.push(b);
 },
@@ -42,7 +38,7 @@ generateSam : function(descr) {
 },
 
 generateSnake : function(descr) {
-    this._entities.push(new Snake({"loc":[0,0.5,0,1]}));
+    this._entities.push(new Snake({"loc":[0,0.0,0,1]}));
 },
 
 generateTebert : function(descr) {
