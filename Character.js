@@ -8,7 +8,7 @@ Character.prototype.isDead = false;
 Character.prototype.availableMoves = [[1,0],[0,1],[-1,0],[0,-1]];
 
 
-Character.prototype.move = function(move){
+Character.prototype.move = function(move,noAnimation){
     var currLoc = this.loc;
     var trans = [move[0],0,move[1],0];
     var currH = this.loc[1];
@@ -19,8 +19,12 @@ Character.prototype.move = function(move){
     
     trans[1] = diff;
     trans[3] = 0;
-    this.setRot(this.getRot(move));
-    this.startAnim(trans);
+    if(!noAnimation){
+	this.setRot(this.getRot(move));
+	this.startAnim(trans);
+    } else {
+	this.translate(trans);
+    }
 };
 
 Character.prototype.setRot = function(newRot){
@@ -46,10 +50,9 @@ Character.prototype.isLegal = function(move){
 
 Character.prototype.getLegalMoves = function(){
    var legalMoves = [];
-   for(var m in this.availableMoves){
+   for(var m in this.availableMoves)
        if(this.isLegal(this.availableMoves[m]))
 	   legalMoves.push(this.availableMoves[m].slice(0));
-       }
    return legalMoves;
 };
 

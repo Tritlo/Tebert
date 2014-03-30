@@ -169,8 +169,8 @@ function start(){
 
 function onVictory() {
     console.log('Victory!');
-    //Horribly inefficient!
     pyramid = new Pyramid({height: pyramid.height+1});
+    entityManager.getTebert().kill();
 }
 
 function onTebertDeath() {

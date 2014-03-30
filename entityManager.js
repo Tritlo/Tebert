@@ -24,21 +24,30 @@ spawnBallCountDown : 100,
 
 init: function() {
     this.generateTebert({"loc":[0,0.5,0,1]});
+    this.disableEnemies = false;
 },
 
 
 generateBall : function(descr) {
+    if(this.disableEnemies) return;
     var bd = {"loc":[0,0.5,0,1]};
     var b = new Ball(bd);
     this._entities.push(b);
 },
 
 generateSam : function(descr) {
-    this._entities.push(new Sam({"loc":[0,0.5,0,1], "color": [0.0,1.0,0.0,0.0]}));
+    if(this.disableEnemies) return;
+    var s = new Sam({"loc":[0,0.5,0,1], "color": [0.0,1.0,0.0,0.0]});
+    s.move([-1,1],true);
+    this._entities.push(s);
 },
 
 generateSnake : function(descr) {
-    this._entities.push(new Snake({"loc":[0,0.0,0,1]}));
+    if(this.disableEnemies) return;
+    var s = new Snake({"loc":[0,0.0,0,1]});
+    s.move([2,1],true);
+    this._entities.push(s);
+    
 },
 
 generateTebert : function(descr) {
