@@ -27,7 +27,7 @@ Ball.prototype.kill = function() {
 };
 
 
-Ball.prototype.waitTime = 100.0;
+Ball.prototype.waitTime = 50.0;
 Ball.prototype.countDown = Ball.prototype.waitTime;
 
 
